@@ -304,8 +304,6 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 		{
 			cur_instr = new ushort[]
 						{operation, src,
-						IDLE,
-						IDLE,
 						OP };
 		}
 
@@ -344,7 +342,7 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 		// let's just put a special operation here specifically for F
 		private void POP_(ushort src_l, ushort src_h)
 		{
-			if (src_l != F)
+			if (src_l != P)
 			{
 				cur_instr = new ushort[]
 							{IDLE,
@@ -399,15 +397,6 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 						OP };
 		}
 
-		private void PREFIX_()
-		{
-			cur_instr = new ushort[]
-						{PREFIX,
-						IDLE,
-						IDLE,
-						OP };
-		}
-
 		private void DI_()
 		{
 			cur_instr = new ushort[]
@@ -423,15 +412,6 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 						{EI,
 						IDLE,
 						IDLE,
-						OP };
-		}
-
-		private void JP_HL()
-		{
-			cur_instr = new ushort[]
-						{TR, PCl, L,
-						IDLE,
-						TR, PCh, H,
 						OP };
 		}
 
@@ -453,36 +433,6 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 						IDLE,
 						IDLE,
 						IDLE,
-						OP };
-		}
-
-		private void LD_SP_HL()
-		{
-			cur_instr = new ushort[]
-						{IDLE,
-						IDLE,
-						IDLE,
-						TR, SPl, L,
-						IDLE,
-						TR, SPh, H,
-						IDLE,
-						OP };
-		}
-
-		private void LD_HL_SPn()
-		{
-			cur_instr = new ushort[]
-						{IDLE,
-						IDLE,
-						IDLE,
-						RD, W, PCl, PCh,
-						IDLE,
-						INC16, PCl, PCh,
-						IDLE,
-						TR, H, SPh,
-						TR, L, SPl,
-						ASGN, Z, 0,
-						ADDS, L, H, W, Z,
 						OP };
 		}
 

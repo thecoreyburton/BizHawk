@@ -122,38 +122,38 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 					case 0x5D: INT_OP(TST, B);							break; // TST B
 					case 0x5E: JAM_();									break; // JAM
 					case 0x5F: INT_OP(CLR, B);							break; // CLR B
-					case 0x60: REG_OP(TR, H, B);						break; // LD H, B
-					case 0x61: REG_OP(TR, H, C);						break; // LD H, C
-					case 0x62: REG_OP(TR, H, D);						break; // LD H, D
-					case 0x63: REG_OP(TR, H, E);						break; // LD H, E
-					case 0x64: REG_OP(TR, H, H);						break; // LD H, H
-					case 0x65: REG_OP(TR, H, L);						break; // LD H, L
-					case 0x66: REG_OP_IND(TR, H, L, H);					break; // LD H, (HL)
-					case 0x67: REG_OP(TR, H, A);						break; // LD H, A
-					case 0x68: REG_OP(TR, L, B);						break; // LD L, B
-					case 0x69: REG_OP(TR, L, C);						break; // LD L, C
-					case 0x6A: REG_OP(TR, L, D);						break; // LD L, D
-					case 0x6B: REG_OP(TR, L, E);						break; // LD L, E
-					case 0x6C: REG_OP(TR, L, H);						break; // LD L, H
-					case 0x6D: REG_OP(TR, L, L);						break; // LD L, L
-					case 0x6E: REG_OP_IND(TR, L, L, H);					break; // LD L, (HL)
-					case 0x6F: REG_OP(TR, L, A);						break; // LD L, A
-					case 0x70: LD_8_IND(L, H, B);						break; // LD (HL), B
-					case 0x71: LD_8_IND(L, H, C);						break; // LD (HL), C
-					case 0x72: LD_8_IND(L, H, D);						break; // LD (HL), D
-					case 0x73: LD_8_IND(L, H, E);						break; // LD (HL), E
-					case 0x74: LD_8_IND(L, H, H);						break; // LD (HL), H
-					case 0x75: LD_8_IND(L, H, L);						break; // LD (HL), L
-					case 0x76: HALT_();									break; // HALT
-					case 0x77: LD_8_IND(L, H, A);						break; // LD (HL), A
-					case 0x78: REG_OP(TR, A, B);						break; // LD A, B
-					case 0x79: REG_OP(TR, A, C);						break; // LD A, C
-					case 0x7A: REG_OP(TR, A, D);						break; // LD A, D
-					case 0x7B: REG_OP(TR, A, E);						break; // LD A, E
-					case 0x7C: REG_OP(TR, A, H);						break; // LD A, H
-					case 0x7D: REG_OP(TR, A, L);						break; // LD A, L
-					case 0x7E: REG_OP_IND(TR, A, L, H);					break; // LD A, (HL)
-					case 0x7F: REG_OP(TR, A, A);						break; // LD A, A
+					case 0x60: I_INT_OP_IND(NEG8, Ixl, Ixh);			break; // NEG Ix + n
+					case 0x61: JAM_();									break; // JAM
+					case 0x62: JAM_();									break; // JAM
+					case 0x63: I_INT_OP_IND(CPL, Ixl, Ixh);				break; // COM Ix + n
+					case 0x64: I_INT_OP_IND(LSR, Ixl, Ixh);				break; // LSR Ix + n
+					case 0x65: JAM_();									break; // JAM
+					case 0x66: I_INT_OP_IND(ROR, Ixl, Ixh);				break; // ROR Ix + n
+					case 0x67: I_INT_OP_IND(ASR, Ixl, Ixh);				break; // ASR Ix + n
+					case 0x68: I_INT_OP_IND(ASL, Ixl, Ixh);				break; // ASL Ix + n
+					case 0x69: I_INT_OP_IND(ROL, Ixl, Ixh);				break; // ROL Ix + n
+					case 0x6A: I_INT_OP_IND(DEC8, Ixl, Ixh);			break; // DEC Ix + n
+					case 0x6B: JAM_();									break; // JAM
+					case 0x6C: I_INT_OP_IND(INC8, Ixl, Ixh);			break; // INC Ix + n
+					case 0x6D: I_INT_OP_IND(TST, Ixl, Ixh);				break; // TST Ix + n
+					case 0x6E: I_JP_IND(Ixl, Ixh);						break; // JMP Ix + n
+					case 0x6F: I_INT_OP_IND(CLR, Ixl, Ixh);				break; // CLR Ix + n
+					case 0x70: INT_OP_EXT(NEG8);						break; // NEG nn
+					case 0x71: JAM_();									break; // JAM
+					case 0x72: JAM_();									break; // JAM
+					case 0x73: INT_OP_EXT(CPL);							break; // COM nn
+					case 0x74: INT_OP_EXT(LSR);							break; // LSR nn
+					case 0x75: JAM_();									break; // JAM
+					case 0x76: INT_OP_EXT(ROR);							break; // ROR nn
+					case 0x77: INT_OP_EXT(ASR);							break; // ASR nn
+					case 0x78: INT_OP_EXT(ASL);							break; // ASL nn
+					case 0x79: INT_OP_EXT(ROL);							break; // ROL nn
+					case 0x7A: INT_OP_EXT(DEC8);						break; // DEC nn
+					case 0x7B: JAM_();									break; // JAM
+					case 0x7C: INT_OP_EXT(INC8);						break; // INC nn
+					case 0x7D: INT_OP_EXT(TST);							break; // TST nn
+					case 0x7E: JP_EXT();								break; // JMP nn
+					case 0x7F: INT_OP_EXT(CLR);							break; // CLR nn
 					case 0x80: REG_OP(ADD8, A, B);						break; // ADD A, B
 					case 0x81: REG_OP(ADD8, A, C);						break; // ADD A, C
 					case 0x82: REG_OP(ADD8, A, D);						break; // ADD A, D

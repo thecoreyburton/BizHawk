@@ -19,6 +19,51 @@
 						OP };
 		}
 
+		private void INT_OP_EXT(ushort operation)
+		{
+			cur_instr = new ushort[]
+						{RD, Z, PCl, PCh,
+						INC16, PCl, PCh,
+						RD, W, PCl, PCh,
+						INC16, PCl, PCh,
+						RD, ALU, Z, W,
+						operation, ALU,
+						WR, Z, W, ALU,
+						OP };
+		}
+
+		private void I_INT_OP_IND(ushort operation, ushort src_l, ushort src_h)
+		{
+			cur_instr = new ushort[]
+						{RD, ALU, PCl, PCh,
+						TR_16, Z, W, src_l, src_h,
+						ADDS, Z, W, ALU,
+						RD, ALU, Z, W,
+						operation, ALU,
+						WR, Z, W, ALU,					
+						OP };
+		}
+
+		private void JP_EXT()
+		{
+			cur_instr = new ushort[]
+						{RD, Z, PCl, PCh,
+						INC16, PCl, PCh,
+						RD, W, PCl, PCh,
+						INC16, PCl, PCh,
+						TR_16, PCl, PCh, Z, W,
+						OP };
+		}
+
+		private void I_JP_IND(ushort src_l, ushort src_h)
+		{
+			cur_instr = new ushort[]
+						{RD, ALU, PCl, PCh,
+						TR_16, PCl, PCh, src_l, src_h,
+						ADDS, PCl, PCh, ALU,
+						OP };
+		}
+
 		private void BIT_OP_IND(ushort operation, ushort bit, ushort src_l, ushort src_h)
 		{
 			cur_instr = new ushort[]
@@ -265,32 +310,6 @@
 						IDLE,		
 						IDLE,
 						IDLE,						
-						OP };
-		}
-
-		private void LD_8_IND_FFC(ushort dest, ushort src_l, ushort src_h)
-		{
-			cur_instr = new ushort[]
-						{IDLE,
-						IDLE,
-						ASGN, Z , 0xFF,
-						RD, dest, C, Z,
-						IDLE,	
-						IDLE,	
-						IDLE,
-						OP };
-		}
-
-		private void LD_FFC_IND_8(ushort dest_l, ushort dest_h, ushort src)
-		{
-			cur_instr = new ushort[]
-						{IDLE,
-						IDLE,
-						ASGN, Z , 0xFF,
-						WR, C, Z, src,
-						IDLE,					
-						IDLE,					
-						IDLE,
 						OP };
 		}
 
