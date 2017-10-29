@@ -85,8 +85,8 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 				case 0x3B: RETI_();									break; // RTI
 				case 0x3C: JAM_();									break; // JAM
 				case 0x3D: JAM_();									break; // JAM
-				case 0x3E: HALT_();									break; // WAI
-				case 0x3F: STOP_();									break; // SWI
+				case 0x3E: WAI_();									break; // WAI
+				case 0x3F: SWI_();									break; // SWI
 				case 0x40: INT_OP(NEG8, A);							break; // NEG A
 				case 0x41: JAM_();									break; // JAM
 				case 0x42: JAM_();									break; // JAM

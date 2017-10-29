@@ -42,36 +42,47 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 						OP };
 		}
 
-		private void STOP_()
+		private void SWI_()
 		{
 			cur_instr = new ushort[]
 						{IDLE,
-						IDLE,
-						IDLE,
-						STOP };
+						DEC16, SPl, SPh,
+						WR, SPl, SPh, B,
+						DEC16, SPl, SPh,
+						WR, SPl, SPh, A,
+						DEC16, SPl, SPh,
+						WR, SPl, SPh, Ixh,
+						DEC16, SPl, SPh,
+						WR, SPl, SPh, Ixl,
+						DEC16, SPl, SPh,
+						WR, SPl, SPh, PCh,
+						DEC16, SPl, SPh,
+						WR, SPl, SPh, PCl,
+						ASGN, Z, 0xFA,
+						ASGN, W, 0xFF,
+						RD, PCl, Z, W,
+						INC16, Z, W,
+						RD, PCh, Z, W,
+						OP };
 		}
 
-		private void HALT_()
+		private void WAI_()
 		{
-			if (!FlagI)
-			{
-				cur_instr = new ushort[]
+			cur_instr = new ushort[]
 						{IDLE,
-						IDLE,
-						IDLE,
-						HALT };
-			}
-			else
-			{
-				// if interrupts are disabled,
-				// a glitchy decrement to the program counter happens
-				cur_instr = new ushort[]
-						{IDLE,
-						IDLE,
-						IDLE,
-						OP_G};
-			}
-			
+						DEC16, SPl, SPh,
+						WR, SPl, SPh, B,
+						DEC16, SPl, SPh,
+						WR, SPl, SPh, A,
+						DEC16, SPl, SPh,
+						WR, SPl, SPh, Ixh,
+						DEC16, SPl, SPh,
+						WR, SPl, SPh, Ixl,
+						DEC16, SPl, SPh,
+						WR, SPl, SPh, PCh,
+						DEC16, SPl, SPh,
+						WR, SPl, SPh, PCl,
+						WAI };
 		}
 
 		private void JR_COND(bool cond)
@@ -181,7 +192,6 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 						IDLE,
 						INC16, SPl, SPh,
 						IDLE,
-						EI_RETI,
 						IDLE,
 						IDLE,
 						IDLE,

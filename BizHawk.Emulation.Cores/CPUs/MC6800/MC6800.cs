@@ -40,19 +40,16 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 		public const ushort BIT = 25;
 		public const ushort RES = 26;
 		public const ushort SET = 27;		
-		public const ushort HALT = 28;
-		public const ushort STOP = 29;
-		public const ushort ASGN = 30;
-		public const ushort ADDS = 31; // signed 16 bit operation used in 2 instructions
-		public const ushort OP_G = 32; // glitchy opcode read performed by halt when interrupts disabled
-		public const ushort JAM = 33;  // all undocumented opcodes jam the machine
-		public const ushort RD_P = 34; // special read case to pop value into F
-		public const ushort EI_RETI = 35; // reti has no delay in interrupt enable
-		public const ushort TR_16 = 36; // 16 bit transfer
-		public const ushort NEG8 = 37; 
-		public const ushort CLR = 38;
-		public const ushort BIT8 = 39;
-		public const ushort CP16 = 40;
+		public const ushort WAI = 28;
+		public const ushort ASGN = 29;
+		public const ushort ADDS = 30; // signed 16 bit operation used in 2 instructions
+		public const ushort JAM = 31;  // all undocumented opcodes jam the machine
+		public const ushort RD_P = 32; // special read case to pop value into P
+		public const ushort TR_16 = 34; // 16 bit transfer
+		public const ushort NEG8 = 35; 
+		public const ushort CLR = 36;
+		public const ushort BIT8 = 37;
+		public const ushort CP16 = 38;
 
 		public MC6800()
 		{
@@ -100,7 +97,7 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 		}
 
 		// Execute instructions
-		public void ExecuteOne(ref byte interrupt_src, byte interrupt_enable)
+		public void ExecuteOne()
 		{
 			switch (cur_instr[instr_pntr++])
 			{
@@ -109,16 +106,20 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 					break;
 				case OP:
 					// Read the opcode of the next instruction				
-					if (EI_pending > 0)
+					if (NMI)
 					{
-						EI_pending--;
-						if (EI_pending == 0)
+						if (TraceCallback != null)
 						{
-							interrupts_enabled = true;
+							TraceCallback(new TraceInfo
+							{
+								Disassembly = "====NMI====",
+								RegisterInfo = ""
+							});
 						}
-					}
 
-					if (FlagI && interrupts_enabled && !jammed)
+						NMI_();
+					}
+					else if (FlagI && interrupts_enabled && !jammed)
 					{
 						interrupts_enabled = false;
 
@@ -131,20 +132,7 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 							});
 						}
 
-						// call interrupt processor with the appropriate source
-						// lowest bit set is highest priority
-						ushort priority = 0;
-
-						if (interrupt_src.Bit(0) && interrupt_enable.Bit(0)) { priority = 0; interrupt_src -= 1; }
-						else if (interrupt_src.Bit(1) && interrupt_enable.Bit(1)) { priority = 1; interrupt_src -= 2; }
-						else if (interrupt_src.Bit(2) && interrupt_enable.Bit(2)) { priority = 2; interrupt_src -= 4; }
-						else if (interrupt_src.Bit(3) && interrupt_enable.Bit(3)) { priority = 3; interrupt_src -= 8; }
-						else if (interrupt_src.Bit(4) && interrupt_enable.Bit(4)) { priority = 4; interrupt_src -= 16; }
-						else { /*Console.WriteLine("No source"); }*/throw new Exception("Interrupt without Source"); }
-
-						if ((interrupt_src & interrupt_enable) == 0) { FlagI = false; }
-
-						INTERRUPT_(priority);
+						INTERRUPT_();
 					}
 					else
 					{
@@ -232,21 +220,23 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 				case SET:
 					SET_Func(cur_instr[instr_pntr++], cur_instr[instr_pntr++]);
 					break;
-				case HALT:
+				case WAI:
 					halted = true;
-
-					if (EI_pending > 0)
+					// Read the opcode of the next instruction				
+					if (NMI)
 					{
-						EI_pending--;
-						if (EI_pending == 0)
+						if (TraceCallback != null)
 						{
-							interrupts_enabled = true;
+							TraceCallback(new TraceInfo
+							{
+								Disassembly = "====NMI====",
+								RegisterInfo = ""
+							});
 						}
+
+						NMI_FAST();
 					}
-
-					// if the I flag is asserted at the time of halt, don't halt
-
-					if (FlagI && interrupts_enabled && !jammed)
+					else if (FlagI && interrupts_enabled && !jammed)
 					{
 						interrupts_enabled = false;
 
@@ -258,80 +248,18 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 								RegisterInfo = ""
 							});
 						}
-						halted = false;
-						// call interrupt processor with the appropriate source
-						// lowest bit set is highest priority
-						// call interrupt processor with the appropriate source
-						// lowest bit set is highest priority
-						ushort priority = 0;
 
-						if (interrupt_src.Bit(0) && interrupt_enable.Bit(0)) { priority = 0; interrupt_src -= 1; }
-						else if (interrupt_src.Bit(1) && interrupt_enable.Bit(1)) { priority = 1; interrupt_src -= 2; }
-						else if (interrupt_src.Bit(2) && interrupt_enable.Bit(2)) { priority = 2; interrupt_src -= 4; }
-						else if (interrupt_src.Bit(3) && interrupt_enable.Bit(3)) { priority = 3; interrupt_src -= 8; }
-						else if (interrupt_src.Bit(4) && interrupt_enable.Bit(4)) { priority = 4; interrupt_src -= 16; }
-						else { /*Console.WriteLine("No source"); }*/throw new Exception("Interrupt without Source"); }
-
-						if ((interrupt_src & interrupt_enable) == 0) { FlagI = false; }
-						instr_pntr = 0;
-						INTERRUPT_(priority);
-					}
-					else if (FlagI)
-					{
-						// even if interrupt servicing is disabled, any interrupt flag raised still resumes execution
-						if (TraceCallback != null)
-						{
-							TraceCallback(new TraceInfo
-							{
-								Disassembly = "====un-halted====",
-								RegisterInfo = ""
-							});
-						}
-						halted = false;
-						if (OnExecFetch != null) OnExecFetch(RegPC);
-						if (TraceCallback != null) TraceCallback(State());
-						FetchInstruction(ReadMemory(RegPC++));
-						instr_pntr = 0;
+						INTERRUPT_FAST();
 					}
 					else
 					{
-						instr_pntr = 0;
 						cur_instr = new ushort[]
 						{IDLE,
 						IDLE,
 						IDLE,
-						HALT };
+						WAI };
 					}
-					break;
-				case STOP:
-					stopped = true;
-
-					if (interrupt_src.Bit(4)) // button pressed, not actually an interrupt though
-					{
-						if (TraceCallback != null)
-						{
-							TraceCallback(new TraceInfo
-							{
-								Disassembly = "====un-stop====",
-								RegisterInfo = ""
-							});
-						}
-
-						stopped = false;
-						if (OnExecFetch != null) OnExecFetch(RegPC);
-						if (TraceCallback != null) TraceCallback(State());
-						FetchInstruction(ReadMemory(RegPC++));
-						instr_pntr = 0;
-					}
-					else
-					{
-						instr_pntr = 0;
-						cur_instr = new ushort[]
-						{IDLE,
-						IDLE,
-						IDLE,
-						STOP };
-					}
+					instr_pntr = 0;
 					break;
 				case ASGN:
 					ASGN_Func(cur_instr[instr_pntr++], cur_instr[instr_pntr++]);
@@ -339,23 +267,12 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 				case ADDS:
 					ADDS_Func(cur_instr[instr_pntr++], cur_instr[instr_pntr++], cur_instr[instr_pntr++], cur_instr[instr_pntr++]);
 					break;
-				case OP_G:
-					if (OnExecFetch != null) OnExecFetch(RegPC);
-					if (TraceCallback != null) TraceCallback(State());
-
-					FetchInstruction(ReadMemory(RegPC)); // note no increment
-
-					instr_pntr = 0;
-					break;
 				case JAM:
 					jammed = true;
 					instr_pntr--;
 					break;
 				case RD_P:
 					Read_Func_P(cur_instr[instr_pntr++], cur_instr[instr_pntr++], cur_instr[instr_pntr++]);
-					break;
-				case EI_RETI:
-					EI_pending = 1;
 					break;
 				case TR_16:
 					TR_16_Func(cur_instr[instr_pntr++], cur_instr[instr_pntr++], cur_instr[instr_pntr++], cur_instr[instr_pntr++]);
@@ -419,12 +336,11 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 		{
 			ser.BeginSection("LR35902");
 			ser.Sync("Regs", ref Regs, false);
-			ser.Sync("IRQ", ref interrupts_enabled);
-			ser.Sync("NMI", ref nonMaskableInterrupt);
-			ser.Sync("NMIPending", ref nonMaskableInterruptPending);
-			ser.Sync("IM", ref interruptMode);
-			ser.Sync("IFF1", ref iff1);
-			ser.Sync("IFF2", ref iff2);
+			ser.Sync("IRQE", ref interrupts_enabled);
+			ser.Sync("NMI", ref NMI);
+			ser.Sync("NMIPending", ref NMIPending);
+			ser.Sync("IRQ", ref IRQ);
+			ser.Sync("IRQPending", ref IRQPending);
 			ser.Sync("Halted", ref halted);
 			ser.Sync("ExecutedCycles", ref totalExecutedCycles);
 			ser.Sync("EI_pending", ref EI_pending);
