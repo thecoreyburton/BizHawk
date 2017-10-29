@@ -183,102 +183,102 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 				case 0x9D: JAM_();									break; // JAM
 				case 0x9E: LD_ZP_16(SPl, SPh, PCl, PCh);			break; // LD SP, zp(n)
 				case 0x9F: LD_16_ZP(PCl, PCh, SPl, SPh);			break; // LD zp(n), SP
-				case 0xA0: REG_OP(AND8, A, B);						break; // AND A, B
-				case 0xA1: REG_OP(AND8, A, C);						break; // AND A, C
-				case 0xA2: REG_OP(AND8, A, D);						break; // AND A, D
-				case 0xA3: REG_OP(AND8, A, E);						break; // AND A, E
-				case 0xA4: REG_OP(AND8, A, H);						break; // AND A, H
-				case 0xA5: REG_OP(AND8, A, L);						break; // AND A, L
-				case 0xA6: REG_OP_IND(AND8, A, L, H);				break; // AND A, (HL)
-				case 0xA7: REG_OP(AND8, A, A);						break; // AND A, A
-				case 0xA8: REG_OP(XOR8, A, B);						break; // XOR A, B
-				case 0xA9: REG_OP(XOR8, A, C);						break; // XOR A, C
-				case 0xAA: REG_OP(XOR8, A, D);						break; // XOR A, D
-				case 0xAB: REG_OP(XOR8, A, E);						break; // XOR A, E
-				case 0xAC: REG_OP(XOR8, A, H);						break; // XOR A, H
-				case 0xAD: REG_OP(XOR8, A, L);						break; // XOR A, L
-				case 0xAE: REG_OP_IND(XOR8, A, L, H);				break; // XOR A, (HL)
-				case 0xAF: REG_OP(XOR8, A, A);						break; // XOR A, A
-				case 0xB0: REG_OP(OR8, A, B);						break; // OR A, B
-				case 0xB1: REG_OP(OR8, A, C);						break; // OR A, C
-				case 0xB2: REG_OP(OR8, A, D);						break; // OR A, D
-				case 0xB3: REG_OP(OR8, A, E);						break; // OR A, E
-				case 0xB4: REG_OP(OR8, A, H);						break; // OR A, H
-				case 0xB5: REG_OP(OR8, A, L);						break; // OR A, L
-				case 0xB6: REG_OP_IND(OR8, A, L, H);				break; // OR A, (HL)
-				case 0xB7: REG_OP(OR8, A, A);						break; // OR A, A
-				case 0xB8: REG_OP(CP8, A, B);						break; // CP A, B
-				case 0xB9: REG_OP(CP8, A, C);						break; // CP A, C
-				case 0xBA: REG_OP(CP8, A, D);						break; // CP A, D
-				case 0xBB: REG_OP(CP8, A, E);						break; // CP A, E
-				case 0xBC: REG_OP(CP8, A, H);						break; // CP A, H
-				case 0xBD: REG_OP(CP8, A, L);						break; // CP A, L
-				case 0xBE: REG_OP_IND(CP8, A, L, H);				break; // CP A, (HL)
-				case 0xBF: REG_OP(CP8, A, A);						break; // CP A, A
-				case 0xC0: RET_COND(!FlagZ);						break; // Ret NZ
-				case 0xC1: POP_(C, B);								break; // POP BC
-				case 0xC2: JP_COND(!FlagZ);							break; // JP NZ
-				case 0xC3: JP_COND(true);							break; // JP
-				case 0xC4: CALL_COND(!FlagZ);						break; // CALL NZ
-				case 0xC5: PUSH_(C, B);								break; // PUSH BC
-				case 0xC6: REG_OP_IND_INC(ADD8, A, PCl, PCh);		break; // ADD A, n
-				case 0xC7: RST_(0);									break; // RST 0
-				case 0xC8: RET_COND(FlagZ);							break; // RET Z
-				case 0xC9: RET_();									break; // RET
-				case 0xCA: JP_COND(FlagZ);							break; // JP Z
-				case 0xCB: PREFIX_();								break; // PREFIX
-				case 0xCC: CALL_COND(FlagZ);						break; // CALL Z
-				case 0xCD: CALL_COND(true);							break; // CALL
-				case 0xCE: REG_OP_IND_INC(ADC8, A, PCl, PCh);		break; // ADC A, n
-				case 0xCF: RST_(0x08);								break; // RST 0x08
-				case 0xD0: RET_COND(!FlagC);						break; // Ret NC
-				case 0xD1: POP_(E, D);								break; // POP DE
-				case 0xD2: JP_COND(!FlagC);							break; // JP NC
+				case 0xA0: I_REG_OP(SUB8, A);						break; // SUB A, (Ix + n)
+				case 0xA1: I_REG_OP(CP8, A);						break; // CMP A, (Ix + n)
+				case 0xA2: I_REG_OP(SBC8, A);						break; // SBC A, (Ix + n)
+				case 0xA3: JAM_();									break; // JAM
+				case 0xA4: I_REG_OP(AND8, A);						break; // AND A, (Ix + n)
+				case 0xA5: I_REG_OP(BIT8, A);						break; // BIT A, (Ix + n)
+				case 0xA6: LD_I_8(A);								break; // LD A, (Ix + n)
+				case 0xA7: LD_8_I(A);								break; // ST A, (Ix + n)
+				case 0xA8: I_REG_OP(XOR8, A);						break; // XOR A, (Ix + n)
+				case 0xA9: I_REG_OP(ADC8, A);						break; // ADC A, (Ix + n)
+				case 0xAA: I_REG_OP(OR8, A);						break; // OR A, (Ix + n)
+				case 0xAB: I_REG_OP(ADD8, A);						break; // ADD A, (Ix + n)
+				case 0xAC: CP_16_I();								break; // CMP Ix, (Ix + n)
+				case 0xAD: I_JSR();									break; // JSR 
+				case 0xAE: LD_I_16(SPl, SPh);						break; // LD SP, (Ix + n)
+				case 0xAF: LD_16_I(SPl, SPh);						break; // LD (Ix + n), SP
+				case 0xB0: REG_OP_EXT(SUB8, A);						break; // SUB A, (nn)
+				case 0xB1: REG_OP_EXT(CP8, A);						break; // CMP A, (nn)
+				case 0xB2: REG_OP_EXT(SBC8, A);						break; // SBC A, (nn)
+				case 0xB3: JAM_();									break; // JAM
+				case 0xB4: REG_OP_EXT(AND8, A);						break; // AND A, (nn)
+				case 0xB5: REG_OP_EXT(BIT8, A);						break; // BIT A, (nn)
+				case 0xB6: LD_8_EXT(A);								break; // LD A, (nn)
+				case 0xB7: LD_8_EXT(A);								break; // ST A, (nn)
+				case 0xB8: REG_OP_EXT(XOR8, A);						break; // XOR A, (nn)
+				case 0xB9: REG_OP_EXT(ADC8, A);						break; // ADC A, (nn)
+				case 0xBA: REG_OP_EXT(OR8, A);						break; // OR A, (nn)
+				case 0xBB: REG_OP_EXT(ADD8, A);						break; // ADD A, (nn)
+				case 0xBC: CP_16_EXT();								break; // CMP (nn), Ix
+				case 0xBD: JSR_EXT();								break; // JSR (nn)
+				case 0xBE: LD_EXT_16(SPl, SPh);						break; // LD SP, (nn)
+				case 0xBF: LD_16_EXT(SPl, SPh);						break; // LD (nn), SP
+				case 0xC0: REG_OP_IMM_INC(SUB8, B, PCl, PCh);		break; // SUB B, n
+				case 0xC1: REG_OP_IMM_INC(CP8, B, PCl, PCh);		break; // CMP B, n
+				case 0xC2: REG_OP_IMM_INC(SBC8, B, PCl, PCh);		break; // SBC B, n
+				case 0xC3: JAM_();									break; // JAM
+				case 0xC4: REG_OP_IMM_INC(AND8, B, PCl, PCh);		break; // AND B, n
+				case 0xC5: REG_OP_IMM_INC(BIT8, B, PCl, PCh);		break; // BIT B, n
+				case 0xC6: LD_IND_8_INC(B, PCl, PCh);				break; // LD B, n
+				case 0xC7: LD_8_IND_INC(PCl, PCh, B);				break; // ST B, n
+				case 0xC8: REG_OP_IMM_INC(XOR8, B, PCl, PCh);		break; // XOR B, n
+				case 0xC9: REG_OP_IMM_INC(ADC8, B, PCl, PCh);		break; // ADC B, n
+				case 0xCA: REG_OP_IMM_INC(OR8, B, PCl, PCh);		break; // OR B, n
+				case 0xCB: REG_OP_IMM_INC(ADD8, B, PCl, PCh);		break; // ADD B, n
+				case 0xCC: JAM_();									break; // JAM
+				case 0xCD: JAM_();									break; // JAM
+				case 0xCE: LD_IMM_16(Ixl, Ixh, PCl, PCh);			break; // LD Ix, nn
+				case 0xCF: LD_16_IMM(PCl, PCh, Ixl, Ixh);			break; // LD nn, Ix
+				case 0xD0: REG_OP_ZP(SUB8, B, PCl, PCh);			break; // SUB B, zp(n)
+				case 0xD1: REG_OP_ZP(CP8, B, PCl, PCh);				break; // CMP B, zp(n)
+				case 0xD2: REG_OP_ZP(SBC8, B, PCl, PCh);			break; // SBC B, zp(n)
 				case 0xD3: JAM_();									break; // JAM
-				case 0xD4: CALL_COND(!FlagC);						break; // CALL NC
-				case 0xD5: PUSH_(E, D);								break; // PUSH DE
-				case 0xD6: REG_OP_IND_INC(SUB8, A, PCl, PCh);		break; // SUB A, n
-				case 0xD7: RST_(0x10);								break; // RST 0x10
-				case 0xD8: RET_COND(FlagC);							break; // RET C
-				case 0xD9: RETI_();									break; // RETI
-				case 0xDA: JP_COND(FlagC);							break; // JP C
-				case 0xDB: JAM_();									break; // JAM
-				case 0xDC: CALL_COND(FlagC);						break; // CALL C
+				case 0xD4: REG_OP_ZP(AND8, B, PCl, PCh);			break; // AND B, zp(n)
+				case 0xD5: REG_OP_ZP(BIT8, B, PCl, PCh);			break; // BIT B, zp(n)
+				case 0xD6: LD_IND_8_ZP(A, PCl, PCh);				break; // LD B, zp(n)
+				case 0xD7: LD_8_IND_ZP(PCl, PCh, B);				break; // ST B, zp(n)
+				case 0xD8: REG_OP_ZP(XOR8, B, PCl, PCh);			break; // XOR B, zp(n)
+				case 0xD9: REG_OP_ZP(ADC8, B, PCl, PCh);			break; // ADC B, zp(n)
+				case 0xDA: REG_OP_ZP(OR8, B, PCl, PCh);				break; // OR B, zp(n)
+				case 0xDB: REG_OP_ZP(ADD8, B, PCl, PCh);			break; // ADD B, zp(n)
+				case 0xDC: JAM_();									break; // JAM
 				case 0xDD: JAM_();									break; // JAM
-				case 0xDE: REG_OP_IND_INC(SBC8, A, PCl, PCh);		break; // SBC A, n
-				case 0xDF: RST_(0x18);								break; // RST 0x18
-				case 0xE0: LD_FF_IND_8(PCl, PCh, A);				break; // LD(n), A
-				case 0xE1: POP_(L, H);								break; // POP HL
-				case 0xE2: LD_FFC_IND_8(PCl, PCh, A);				break; // LD(C), A
+				case 0xDE: LD_ZP_16(Ixl, Ixh, PCl, PCh);			break; // LD Ix, zp(n)
+				case 0xDF: LD_16_ZP(PCl, PCh, Ixl, Ixh);			break; // LD zp(n), Ix
+				case 0xE0: I_REG_OP(SUB8, B);						break; // SUB B, (Ix + n)
+				case 0xE1: I_REG_OP(CP8, B);						break; // CMP B, (Ix + n)
+				case 0xE2: I_REG_OP(SBC8, B);						break; // SBC B, (Ix + n)
 				case 0xE3: JAM_();									break; // JAM
-				case 0xE4: JAM_();                                  break; // JAM
-				case 0xE5: PUSH_(L, H);								break; // PUSH HL
-				case 0xE6: REG_OP_IND_INC(AND8, A, PCl, PCh);		break; // AND A, n
-				case 0xE7: RST_(0x20);								break; // RST 0x20
-				case 0xE8: ADD_SP();								break; // ADD SP,n
-				case 0xE9: JP_HL();									break; // JP (HL)
-				case 0xEA: LD_FF_IND_16(PCl, PCh, A);				break; // LD(nn), A
-				case 0xEB: JAM_();									break; // JAM
+				case 0xE4: I_REG_OP(AND8, B);						break; // AND B, (Ix + n)
+				case 0xE5: I_REG_OP(BIT8, B);						break; // BIT B, (Ix + n)
+				case 0xE6: LD_I_8(B);								break; // LD B, (Ix + n)
+				case 0xE7: LD_8_I(B);								break; // ST B, (Ix + n)
+				case 0xE8: I_REG_OP(XOR8, B);						break; // XOR B, (Ix + n)
+				case 0xE9: I_REG_OP(ADC8, B);						break; // ADC B, (Ix + n)
+				case 0xEA: I_REG_OP(OR8, B);						break; // OR B, (Ix + n)
+				case 0xEB: I_REG_OP(ADD8, B);						break; // ADD B, (Ix + n)
 				case 0xEC: JAM_();									break; // JAM
 				case 0xED: JAM_();									break; // JAM
-				case 0xEE: REG_OP_IND_INC(XOR8, A, PCl, PCh);		break; // XOR A, n
-				case 0xEF: RST_(0x28);								break; // RST 0x28
-				case 0xF0: LD_8_IND_FF(A, PCl, PCh);				break; // A, LD(n)
-				case 0xF1: POP_(F, A);								break; // POP AF
-				case 0xF2: LD_8_IND_FFC(A, PCl, PCh);				break; // A, LD(C)
-				case 0xF3: DI_();									break; // DI
-				case 0xF4: JAM_();									break; // JAM
-				case 0xF5: PUSH_(F, A);								break; // PUSH AF
-				case 0xF6: REG_OP_IND_INC(OR8, A, PCl, PCh);		break; // OR A, n
-				case 0xF7: RST_(0x30);								break; // RST 0x30
-				case 0xF8: LD_HL_SPn();								break; // LD HL, SP+n
-				case 0xF9: LD_SP_HL();								break; // LD, SP, HL
-				case 0xFA: LD_16_IND_FF(A, PCl, PCh);				break; // A, LD(nn)
-				case 0xFB: EI_();									break; // EI
-				case 0xFC: JAM_();									break; // JAM
-				case 0xFD: JAM_();									break; // JAM
-				case 0xFE: REG_OP_IND_INC(CP8, A, PCl, PCh);		break; // XOR A, n
-				case 0xFF: RST_(0x38);								break; // RST 0x38
+				case 0xEE: LD_I_16(Ixl, Ixh);						break; // LD Ix, (Ix + n)
+				case 0xEF: LD_16_I(Ixl, Ixh);						break; // LD (Ix + n), Ix
+				case 0xF0: REG_OP_EXT(SUB8, B);						break; // SUB B, (nn)
+				case 0xF1: REG_OP_EXT(CP8, B);						break; // CMP B, (nn)
+				case 0xF2: REG_OP_EXT(SBC8, B);						break; // SBC B, (nn)
+				case 0xF3: JAM_();									break; // JAM
+				case 0xF4: REG_OP_EXT(AND8, B);						break; // AND B, (nn)
+				case 0xF5: REG_OP_EXT(BIT8, B);						break; // BIT B, (nn)
+				case 0xF6: LD_8_EXT(B);								break; // LD B, (nn)
+				case 0xF7: LD_8_EXT(B);								break; // ST B, (nn)
+				case 0xF8: REG_OP_EXT(XOR8, B);						break; // XOR B, (nn)
+				case 0xF9: REG_OP_EXT(ADC8, B);						break; // ADC B, (nn)
+				case 0xFA: REG_OP_EXT(OR8, B);						break; // OR B, (nn)
+				case 0xFB: REG_OP_EXT(ADD8, B);						break; // ADD B, (nn)
+				case 0xFC: JAM_();									break; // CMP (nn), Ix
+				case 0xFD: JAM_();									break; // JSR (nn)
+				case 0xFE: LD_EXT_16(Ixl, Ixh);						break; // LD Ix, (nn)
+				case 0xFF: LD_16_EXT(Ixl, Ixh);						break; // LD (nn), Ix
 			}
 		}
 	}

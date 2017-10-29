@@ -261,5 +261,183 @@
 						IDLE,
 						OP };
 		}
+
+		private void I_REG_OP(ushort operation, ushort dest)
+		{
+			cur_instr = new ushort[]
+						{RD, ALU, PCl, PCh,
+						INC16, PCl, PCh,
+						TR_16, Z, W, Ixl, Ixh,
+						ADDS, Z, W, ALU,
+						RD, ALU, Z, W,
+						operation, dest, ALU,
+						OP };
+		}
+
+		private void I_JSR()
+		{
+			cur_instr = new ushort[]
+						{RD, ALU, PCl, PCh,
+						INC16, PCl, PCh,
+						DEC16, SPl, SPh,
+						WR, SPl, SPh, PCh,
+						DEC16, SPl, SPh,
+						WR, SPl, SPh, PCl,
+						TR_16, PCl, PCh, Ixl, Ixh,
+						ADDS, PCl, PCh, ALU,
+						OP };
+		}
+
+		private void LD_8_I(ushort src)
+		{
+			cur_instr = new ushort[]
+						{RD, ALU, PCl, PCh,
+						INC16, PCl, PCh,
+						TR_16, Z, W, Ixl, Ixh,
+						ADDS, Z, W, ALU,
+						WR, Z, W, src,
+						OP };
+		}
+
+		private void LD_I_8(ushort dest)
+		{
+			cur_instr = new ushort[]
+						{RD, ALU, PCl, PCh,
+						INC16, PCl, PCh,
+						TR_16, Z, W, Ixl, Ixh,
+						ADDS, Z, W, ALU,
+						RD, dest, Z, W,
+						OP };
+		}
+
+		private void CP_16_I()
+		{
+			cur_instr = new ushort[]
+						{RD, ALU, PCl, PCh,
+						INC16, PCl, PCh,
+						TR_16, Z, W, Ixl, Ixh,
+						ADDS, Z, W, ALU,
+						RD, ALU2, Z, W,
+						INC16, W, Z,
+						RD, ALU, Z, W,
+						CP16, ALU2, ALU, Ixl, Ixh,
+						OP };
+		}
+
+		private void LD_I_16(ushort dest_l, ushort dest_h)
+		{
+			cur_instr = new ushort[]
+						{RD, ALU, PCl, PCh,
+						INC16, PCl, PCh,
+						TR_16, Z, W, Ixl, Ixh,
+						ADDS, Z, W, ALU,
+						RD, dest_l, Z, W,
+						INC16, W, Z,
+						RD, dest_h, Z, W,
+						OP };
+		}
+
+		private void LD_16_I(ushort src_l, ushort src_h)
+		{
+			cur_instr = new ushort[]
+						{RD, ALU, PCl, PCh,
+						INC16, PCl, PCh,
+						TR_16, Z, W, Ixl, Ixh,
+						ADDS, Z, W, ALU,
+						WR, Z, W, src_l,
+						INC16, W, Z,
+						WR, Z, W, src_h,
+						OP };
+		}
+
+		private void JSR_EXT()
+		{
+			cur_instr = new ushort[]
+						{RD, Z, PCl, PCh,
+						INC16, PCl, PCh,
+						RD, W, PCl, PCh,
+						INC16, PCl, PCh,
+						DEC16, SPl, SPh,
+						WR, SPl, SPh, PCh,
+						DEC16, SPl, SPh,
+						WR, SPl, SPh, PCl,
+						TR_16, PCl, PCh, Z, W,
+						OP };
+		}
+
+		private void LD_8_EXT(ushort src)
+		{
+			cur_instr = new ushort[]
+						{RD, Z, PCl, PCh,
+						INC16, PCl, PCh,
+						RD, W, PCl, PCh,
+						INC16, PCl, PCh,
+						WR, Z, W, src,
+						OP };
+		}
+
+		private void LD_EXT_8(ushort dest)
+		{
+			cur_instr = new ushort[]
+						{RD, Z, PCl, PCh,
+						INC16, PCl, PCh,
+						RD, W, PCl, PCh,
+						INC16, PCl, PCh,
+						RD, dest, Z, W,
+						OP };
+		}
+
+		private void CP_16_EXT()
+		{
+			cur_instr = new ushort[]
+						{RD, Z, PCl, PCh,
+						INC16, PCl, PCh,
+						RD, W, PCl, PCh,
+						INC16, PCl, PCh,
+						RD, ALU2, Z, W,
+						INC16, W, Z,
+						RD, ALU, Z, W,
+						CP16, ALU2, ALU, Ixl, Ixh,
+						OP };
+		}
+
+		private void LD_EXT_16(ushort dest_l, ushort dest_h)
+		{
+			cur_instr = new ushort[]
+						{RD, Z, PCl, PCh,
+						INC16, PCl, PCh,
+						RD, W, PCl, PCh,
+						INC16, PCl, PCh,
+						RD, dest_l, Z, W,
+						INC16, W, Z,
+						RD, dest_h, Z, W,
+						OP };
+		}
+
+		private void LD_16_EXT(ushort src_l, ushort src_h)
+		{
+			cur_instr = new ushort[]
+						{RD, Z, PCl, PCh,
+						INC16, PCl, PCh,
+						RD, W, PCl, PCh,
+						INC16, PCl, PCh,
+						WR, Z, W, src_l,
+						INC16, W, Z,
+						WR, Z, W, src_h,
+						OP };
+		}
+
+		private void REG_OP_EXT(ushort operation, ushort dest)
+		{
+			cur_instr = new ushort[]
+						{RD, Z, PCl, PCh,
+						INC16, PCl, PCh,
+						RD, W, PCl, PCh,
+						INC16, PCl, PCh,
+						RD, ALU, Z, W,
+						operation, dest, ALU,
+						IDLE,
+						OP };
+		}
 	}
 }
