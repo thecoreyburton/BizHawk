@@ -6,7 +6,7 @@ using BizHawk.Common;
 using BizHawk.Emulation.Common;
 using BizHawk.Common.NumberExtensions;
 
-// GameBoy CPU (Sharp LR35902)
+// Motorola Corp 6800
 namespace BizHawk.Emulation.Common.Cores.MC6800
 {
 	public sealed partial class MC6800
@@ -17,47 +17,42 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 		public const ushort RD = 2;
 		public const ushort WR = 3;
 		public const ushort TR = 4;
-		public const ushort ADD16 = 5;
-		public const ushort ADD8 = 6;
-		public const ushort SUB8 = 7;
-		public const ushort ADC8 = 8;
-		public const ushort SBC8 = 9;
-		public const ushort INC16 = 10;
-		public const ushort INC8 = 11;
-		public const ushort DEC16 = 12;
-		public const ushort DEC8 = 13;
-		public const ushort ASL = 14;
-		public const ushort ROL = 15;
-		public const ushort ASR = 16;
-		public const ushort ROR = 17;
-		public const ushort TST = 18;
-		public const ushort LSR = 19;
-		public const ushort CPL = 20;
-		public const ushort DA = 21;
-		public const ushort AND8 = 22;
-		public const ushort XOR8 = 23;
-		public const ushort OR8 = 24;
-		public const ushort CP8 = 25;
-		public const ushort SLA = 26;
-		public const ushort SWAP = 29;
-		public const ushort BIT = 30;
-		public const ushort RES = 31;
-		public const ushort SET = 32;		
-		public const ushort EI = 33;
-		public const ushort DI = 34;
-		public const ushort HALT = 35;
-		public const ushort STOP = 36;
-		public const ushort ASGN = 38;
-		public const ushort ADDS = 39; // signed 16 bit operation used in 2 instructions
-		public const ushort OP_G = 40; // glitchy opcode read performed by halt when interrupts disabled
-		public const ushort JAM = 41;  // all undocumented opcodes jam the machine
-		public const ushort RD_F = 42; // special read case to pop value into F
-		public const ushort EI_RETI = 43; // reti has no delay in interrupt enable
-		public const ushort TR_16 = 44; // 16 bit transfer
-		public const ushort NEG8 = 45; 
-		public const ushort CLR = 46;
-		public const ushort BIT8 = 47;
-		public const ushort CP16 = 48;
+		public const ushort ADD8 = 5;
+		public const ushort SUB8 = 6;
+		public const ushort ADC8 = 7;
+		public const ushort SBC8 = 8;
+		public const ushort INC16 = 9;
+		public const ushort INC8 = 10;
+		public const ushort DEC16 = 11;
+		public const ushort DEC8 = 12;
+		public const ushort ASL = 13;
+		public const ushort ROL = 14;
+		public const ushort ASR = 15;
+		public const ushort ROR = 16;
+		public const ushort TST = 17;
+		public const ushort LSR = 18;
+		public const ushort CPL = 19;
+		public const ushort DA = 20;
+		public const ushort AND8 = 21;
+		public const ushort XOR8 = 22;
+		public const ushort OR8 = 23;
+		public const ushort CP8 = 24;
+		public const ushort BIT = 25;
+		public const ushort RES = 26;
+		public const ushort SET = 27;		
+		public const ushort HALT = 28;
+		public const ushort STOP = 29;
+		public const ushort ASGN = 30;
+		public const ushort ADDS = 31; // signed 16 bit operation used in 2 instructions
+		public const ushort OP_G = 32; // glitchy opcode read performed by halt when interrupts disabled
+		public const ushort JAM = 33;  // all undocumented opcodes jam the machine
+		public const ushort RD_P = 34; // special read case to pop value into F
+		public const ushort EI_RETI = 35; // reti has no delay in interrupt enable
+		public const ushort TR_16 = 36; // 16 bit transfer
+		public const ushort NEG8 = 37; 
+		public const ushort CLR = 38;
+		public const ushort BIT8 = 39;
+		public const ushort CP16 = 40;
 
 		public MC6800()
 		{
@@ -168,9 +163,6 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 				case TR:
 					TR_Func(cur_instr[instr_pntr++], cur_instr[instr_pntr++]);
 					break;
-				case ADD16:
-					ADD16_Func(cur_instr[instr_pntr++], cur_instr[instr_pntr++], cur_instr[instr_pntr++], cur_instr[instr_pntr++]);
-					break;
 				case ADD8:
 					ADD8_Func(cur_instr[instr_pntr++], cur_instr[instr_pntr++]);
 					break;
@@ -231,9 +223,6 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 				case CP8:
 					CP8_Func(cur_instr[instr_pntr++], cur_instr[instr_pntr++]);
 					break;
-				case SWAP:
-					SWAP_Func(cur_instr[instr_pntr++]);
-					break;
 				case BIT:
 					BIT_Func(cur_instr[instr_pntr++], cur_instr[instr_pntr++]);
 					break;
@@ -242,13 +231,6 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 					break;
 				case SET:
 					SET_Func(cur_instr[instr_pntr++], cur_instr[instr_pntr++]);
-					break;
-				case EI:
-					EI_pending = 2;
-					break;
-				case DI:
-					interrupts_enabled = false;
-					EI_pending = 0;
 					break;
 				case HALT:
 					halted = true;
@@ -369,8 +351,8 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 					jammed = true;
 					instr_pntr--;
 					break;
-				case RD_F:
-					Read_Func_F(cur_instr[instr_pntr++], cur_instr[instr_pntr++], cur_instr[instr_pntr++]);
+				case RD_P:
+					Read_Func_P(cur_instr[instr_pntr++], cur_instr[instr_pntr++], cur_instr[instr_pntr++]);
 					break;
 				case EI_RETI:
 					EI_pending = 1;

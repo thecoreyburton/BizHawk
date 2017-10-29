@@ -151,18 +151,18 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 				case 0x7D: INT_OP_EXT(TST);							break; // TST (nn)
 				case 0x7E: JP_EXT();								break; // JMP (nn)
 				case 0x7F: INT_OP_EXT(CLR);							break; // CLR (nn)
-				case 0x80: REG_OP_IMM_INC(SUB8, A, PCl, PCh);		break; // SUB A, n
-				case 0x81: REG_OP_IMM_INC(CP8, A, PCl, PCh);		break; // CMP A, n
-				case 0x82: REG_OP_IMM_INC(SBC8, A, PCl, PCh);		break; // SBC A, n
+				case 0x80: REG_OP_IMM(SUB8, A, PCl, PCh);			break; // SUB A, n
+				case 0x81: REG_OP_IMM(CP8, A, PCl, PCh);			break; // CMP A, n
+				case 0x82: REG_OP_IMM(SBC8, A, PCl, PCh);			break; // SBC A, n
 				case 0x83: JAM_();									break; // JAM
-				case 0x84: REG_OP_IMM_INC(AND8, A, PCl, PCh);		break; // AND A, n
-				case 0x85: REG_OP_IMM_INC(BIT8, A, PCl, PCh);		break; // BIT A, n
+				case 0x84: REG_OP_IMM(AND8, A, PCl, PCh);			break; // AND A, n
+				case 0x85: REG_OP_IMM(BIT8, A, PCl, PCh);			break; // BIT A, n
 				case 0x86: LD_IND_8_INC(A, PCl, PCh);				break; // LD A, n
 				case 0x87: LD_8_IND_INC(PCl, PCh, A);				break; // ST A, n
-				case 0x88: REG_OP_IMM_INC(XOR8, A, PCl, PCh);		break; // XOR A, n
-				case 0x89: REG_OP_IMM_INC(ADC8, A, PCl, PCh);		break; // ADC A, n
-				case 0x8A: REG_OP_IMM_INC(OR8, A, PCl, PCh);		break; // OR A, n
-				case 0x8B: REG_OP_IMM_INC(ADD8, A, PCl, PCh);		break; // ADD A, n
+				case 0x88: REG_OP_IMM(XOR8, A, PCl, PCh);			break; // XOR A, n
+				case 0x89: REG_OP_IMM(ADC8, A, PCl, PCh);			break; // ADC A, n
+				case 0x8A: REG_OP_IMM(OR8, A, PCl, PCh);			break; // OR A, n
+				case 0x8B: REG_OP_IMM(ADD8, A, PCl, PCh);			break; // ADD A, n
 				case 0x8C: CP_16_IMM(Ixl, Ixh);						break; // CMP nn, Ix
 				case 0x8D: BRS();									break; // BRS
 				case 0x8E: LD_IMM_16(SPl, SPh, PCl, PCh);			break; // LD SP, nn
@@ -215,18 +215,18 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 				case 0xBD: JSR_EXT();								break; // JSR (nn)
 				case 0xBE: LD_EXT_16(SPl, SPh);						break; // LD SP, (nn)
 				case 0xBF: LD_16_EXT(SPl, SPh);						break; // LD (nn), SP
-				case 0xC0: REG_OP_IMM_INC(SUB8, B, PCl, PCh);		break; // SUB B, n
-				case 0xC1: REG_OP_IMM_INC(CP8, B, PCl, PCh);		break; // CMP B, n
-				case 0xC2: REG_OP_IMM_INC(SBC8, B, PCl, PCh);		break; // SBC B, n
+				case 0xC0: REG_OP_IMM(SUB8, B, PCl, PCh);			break; // SUB B, n
+				case 0xC1: REG_OP_IMM(CP8, B, PCl, PCh);			break; // CMP B, n
+				case 0xC2: REG_OP_IMM(SBC8, B, PCl, PCh);			break; // SBC B, n
 				case 0xC3: JAM_();									break; // JAM
-				case 0xC4: REG_OP_IMM_INC(AND8, B, PCl, PCh);		break; // AND B, n
-				case 0xC5: REG_OP_IMM_INC(BIT8, B, PCl, PCh);		break; // BIT B, n
+				case 0xC4: REG_OP_IMM(AND8, B, PCl, PCh);			break; // AND B, n
+				case 0xC5: REG_OP_IMM(BIT8, B, PCl, PCh);			break; // BIT B, n
 				case 0xC6: LD_IND_8_INC(B, PCl, PCh);				break; // LD B, n
 				case 0xC7: LD_8_IND_INC(PCl, PCh, B);				break; // ST B, n
-				case 0xC8: REG_OP_IMM_INC(XOR8, B, PCl, PCh);		break; // XOR B, n
-				case 0xC9: REG_OP_IMM_INC(ADC8, B, PCl, PCh);		break; // ADC B, n
-				case 0xCA: REG_OP_IMM_INC(OR8, B, PCl, PCh);		break; // OR B, n
-				case 0xCB: REG_OP_IMM_INC(ADD8, B, PCl, PCh);		break; // ADD B, n
+				case 0xC8: REG_OP_IMM(XOR8, B, PCl, PCh);			break; // XOR B, n
+				case 0xC9: REG_OP_IMM(ADC8, B, PCl, PCh);			break; // ADC B, n
+				case 0xCA: REG_OP_IMM(OR8, B, PCl, PCh);			break; // OR B, n
+				case 0xCB: REG_OP_IMM(ADD8, B, PCl, PCh);			break; // ADD B, n
 				case 0xCC: JAM_();									break; // JAM
 				case 0xCD: JAM_();									break; // JAM
 				case 0xCE: LD_IMM_16(Ixl, Ixh, PCl, PCh);			break; // LD Ix, nn

@@ -2,23 +2,6 @@
 {
 	public partial class MC6800
 	{
-		private void INT_OP_IND(ushort operation, ushort src_l, ushort src_h)
-		{
-			cur_instr = new ushort[]
-						{IDLE,
-						IDLE,
-						IDLE,
-						RD, Z, src_l, src_h,
-						IDLE,
-						operation, Z,
-						IDLE,
-						WR, src_l, src_h, Z,
-						IDLE,					
-						IDLE,						
-						IDLE,
-						OP };
-		}
-
 		private void INT_OP_EXT(ushort operation)
 		{
 			cur_instr = new ushort[]
@@ -61,36 +44,6 @@
 						{RD, ALU, PCl, PCh,
 						TR_16, PCl, PCh, src_l, src_h,
 						ADDS, PCl, PCh, ALU,
-						OP };
-		}
-
-		private void BIT_OP_IND(ushort operation, ushort bit, ushort src_l, ushort src_h)
-		{
-			cur_instr = new ushort[]
-						{IDLE,
-						IDLE,
-						IDLE,	
-						RD, Z, src_l, src_h,
-						IDLE,
-						operation, bit, Z,
-						IDLE,
-						WR, src_l, src_h, Z,
-						IDLE,
-						IDLE,
-						IDLE,
-						OP };
-		}
-
-		private void BIT_TE_IND(ushort operation, ushort bit, ushort src_l, ushort src_h)
-		{
-			cur_instr = new ushort[]
-						{IDLE,
-						IDLE,
-						IDLE,
-						RD, Z, src_l, src_h,
-						IDLE,
-						operation, bit, Z,
-						IDLE,
 						OP };
 		}
 
@@ -225,40 +178,6 @@
 						WR, Z, W, SPl,
 						INC16, Z, W,
 						WR, Z, W, SPh,
-						OP };
-		}
-
-		private void INC_8_IND(ushort src_l, ushort src_h)
-		{
-			cur_instr = new ushort[]
-						{IDLE,
-						IDLE,
-						IDLE,					
-						RD, Z, src_l, src_h,
-						IDLE,
-						INC8, Z,
-						IDLE,
-						WR,  src_l, src_h, Z,
-						IDLE,
-						IDLE,
-						IDLE,
-						OP };
-		}
-
-		private void DEC_8_IND(ushort src_l, ushort src_h)
-		{
-			cur_instr = new ushort[]
-						{IDLE,
-						IDLE,
-						IDLE,	
-						RD, Z, src_l, src_h,
-						IDLE,
-						DEC8, Z,
-						IDLE,
-						WR, src_l, src_h, Z,
-						IDLE,
-						IDLE,
-						IDLE,
 						OP };
 		}
 

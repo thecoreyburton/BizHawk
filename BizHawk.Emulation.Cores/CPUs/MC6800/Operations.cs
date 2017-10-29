@@ -10,10 +10,10 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 			Regs[dest] = ReadMemory((ushort)(Regs[src_l] | (Regs[src_h]) << 8));
 		}
 
-		// speical read for POP AF that always clears the lower 4 bits of F 
-		public void Read_Func_F(ushort dest, ushort src_l, ushort src_h)
+		// speical read for POP P 
+		public void Read_Func_P(ushort dest, ushort src_l, ushort src_h)
 		{
-			Regs[dest] = (ushort)(ReadMemory((ushort)(Regs[src_l] | (Regs[src_h]) << 8)) & 0xF0);
+			Regs[dest] = (ushort)(ReadMemory((ushort)(Regs[src_l] | (Regs[src_h]) << 8)) | 0xC0);
 		}
 
 		public void Write_Func(ushort dest_l, ushort dest_h, ushort src)
@@ -30,31 +30,6 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 		{
 			Regs[dest_l] = Regs[src_l];
 			Regs[dest_h] = Regs[src_h];
-		}
-
-		public void ADD16_Func(ushort dest_l, ushort dest_h, ushort src_l, ushort src_h)
-		{
-			int Reg16_d = Regs[dest_l] | (Regs[dest_h]  << 8);
-			int Reg16_s = Regs[src_l] | (Regs[src_h] << 8);
-
-			Reg16_d += Reg16_s;
-
-			FlagC = Reg16_d.Bit(16);
-
-			ushort ans_l = (ushort)(Reg16_d & 0xFF);
-			ushort ans_h = (ushort)((Reg16_d & 0xFF00) >> 8);
-
-			// redo for half carry flag
-			Reg16_d = Regs[dest_l] | ((Regs[dest_h] & 0x0F) << 8);
-			Reg16_s = Regs[src_l] | ((Regs[src_h] & 0x0F) << 8);
-
-			Reg16_d += Reg16_s;
-
-			FlagH = Reg16_d.Bit(12);
-			FlagN = false;
-
-			Regs[dest_l] = ans_l;
-			Regs[dest_h] = ans_h;
 		}
 
 		public void NEG_8_Func(ushort src)
@@ -140,17 +115,6 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 		public void ASGN_Func(ushort src, ushort val)
 		{
 			Regs[src] = val;
-		}
-
-		public void SWAP_Func(ushort src)
-		{
-			ushort temp = (ushort)((Regs[src] << 4) & 0xF0);
-			Regs[src] = (ushort)(temp | (Regs[src] >> 4));
-
-			FlagZ = Regs[src] == 0;
-			FlagH = false;
-			FlagN = false;
-			FlagC = false;
 		}
 
 		public void BIT8_Func(ushort dest, ushort src)

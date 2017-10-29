@@ -11,8 +11,6 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 		{
 			cur_instr = new ushort[]
 						{IDLE,
-						IDLE,
-						IDLE,
 						OP };
 		}
 
@@ -20,10 +18,6 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 		{
 			cur_instr = new ushort[]
 						{INC16,  src_l, src_h,
-						IDLE,
-						IDLE,
-						IDLE,
-						IDLE,
 						IDLE,
 						IDLE,
 						OP };
@@ -34,23 +28,6 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 		{
 			cur_instr = new ushort[]
 						{DEC16, src_l, src_h,
-						IDLE,
-						IDLE,
-						IDLE,
-						IDLE,
-						IDLE,
-						IDLE,
-						OP };
-		}
-
-		private void ADD_16(ushort dest_l, ushort dest_h, ushort src_l, ushort src_h)
-		{
-			cur_instr = new ushort[]
-						{ADD16, dest_l, dest_h, src_l, src_h,
-						IDLE,
-						IDLE,
-						IDLE,
-						IDLE,
 						IDLE,
 						IDLE,
 						OP };
@@ -211,95 +188,6 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 						OP };
 		}
 
-
-		private void RET_COND(bool cond)
-		{
-			if (cond)
-			{
-				cur_instr = new ushort[]
-							{IDLE,
-							IDLE,
-							IDLE,
-							IDLE,
-							IDLE,
-							IDLE,
-							IDLE,
-							RD, PCl, SPl, SPh,
-							IDLE,
-							INC16, SPl, SPh,
-							IDLE,
-							RD, PCh, SPl, SPh,
-							IDLE,
-							INC16, SPl, SPh,
-							IDLE,
-							IDLE,
-							IDLE,
-							IDLE,
-							IDLE,
-							OP };
-			}
-			else
-			{
-				cur_instr = new ushort[]
-							{IDLE,
-							IDLE,
-							IDLE,
-							IDLE,
-							IDLE,
-							IDLE,
-							IDLE,
-							OP };
-			}
-		}
-
-		private void CALL_COND(bool cond)
-		{
-			if (cond)
-			{
-				cur_instr = new ushort[]
-							{IDLE,
-							IDLE,
-							IDLE,
-							RD, W, PCl, PCh,
-							INC16, PCl, PCh,
-							IDLE,							
-							IDLE,
-							RD, Z, PCl, PCh,
-							INC16, PCl, PCh,
-							IDLE,
-							DEC16, SPl, SPh,
-							IDLE,
-							IDLE,
-							IDLE,
-							IDLE,
-							WR, SPl, SPh, PCh,
-							IDLE,							
-							IDLE,
-							DEC16, SPl, SPh,
-							WR, SPl, SPh, PCl,
-							IDLE,
-							TR, PCl, W,
-							TR, PCh, Z,
-							OP };
-			}
-			else
-			{
-				cur_instr = new ushort[]
-							{IDLE,
-							IDLE,
-							IDLE,
-							RD, W, PCl, PCh,
-							IDLE,
-							INC16, PCl, PCh,
-							IDLE,
-							RD, Z, PCl, PCh,
-							IDLE,
-							INC16, PCl, PCh,
-							IDLE,
-							OP };
-			}
-		}
-
 		private void BRS()
 		{
 
@@ -351,9 +239,9 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 						OP };
 		}
 
-		// NOTE: this is the only instruction that can write to F
-		// but the bottom 4 bits of F are always 0, so instead of putting a special check for every read op
-		// let's just put a special operation here specifically for F
+		// NOTE: this is the only instruction that can write to P
+		// but the top 2 bits of P are always 1, so instead of putting a special check for every read op
+		// let's just put a special operation here specifically for P
 		private void POP_(ushort src)
 		{
 			if (src != P)
@@ -374,33 +262,12 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 							{IDLE,
 							IDLE,
 							IDLE,
-							RD_F, src, SPl, SPh,
+							RD_P, src, SPl, SPh,
 							IDLE,
 							INC16, SPl, SPh,
 							IDLE,
 							OP };
 			} 
-		}
-
-		private void RST_(ushort n)
-		{
-			cur_instr = new ushort[]
-						{IDLE,
-						IDLE,
-						IDLE,
-						DEC16, SPl, SPh,
-						IDLE,						
-						IDLE,					
-						IDLE,
-						WR, SPl, SPh, PCh,
-						DEC16, SPl, SPh,
-						IDLE,				
-						IDLE,
-						WR, SPl, SPh, PCl,
-						IDLE,
-						ASGN, PCh, 0,
-						ASGN, PCl, n,
-						OP };
 		}
 
 		private void JAM_()
@@ -433,7 +300,7 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 						OP };
 		}
 
-		private void REG_OP_IMM_INC(ushort operation, ushort dest, ushort src_l, ushort src_h)
+		private void REG_OP_IMM(ushort operation, ushort dest, ushort src_l, ushort src_h)
 		{
 			cur_instr = new ushort[]
 						{IDLE,
