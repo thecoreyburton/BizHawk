@@ -56,7 +56,9 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 		public const ushort EI_RETI = 43; // reti has no delay in interrupt enable
 		public const ushort TR_16 = 44; // 16 bit transfer
 		public const ushort NEG8 = 45; 
-		public const ushort CLR = 46; 
+		public const ushort CLR = 46;
+		public const ushort BIT8 = 47;
+		public const ushort CP16 = 48;
 
 		public MC6800()
 		{
@@ -385,6 +387,12 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 					break;
 				case CLR:
 					CLR_Func(cur_instr[instr_pntr++]);
+					break;
+				case BIT8:
+					BIT8_Func(cur_instr[instr_pntr++], cur_instr[instr_pntr++]);
+					break;
+				case CP16:
+					CP16_Func(cur_instr[instr_pntr++], cur_instr[instr_pntr++], cur_instr[instr_pntr++], cur_instr[instr_pntr++]);
 					break;
 			}
 			totalExecutedCycles++;

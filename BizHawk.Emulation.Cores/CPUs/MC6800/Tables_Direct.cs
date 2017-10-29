@@ -300,6 +300,27 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 			}
 		}
 
+		private void BRS()
+		{
+
+			cur_instr = new ushort[]
+						{IDLE,
+						IDLE,
+						IDLE,
+						RD, ALU, PCl, PCh,
+						INC16, PCl, PCh,
+						IDLE,
+						DEC16, SPl, SPh,
+						WR, SPl, SPh, PCh,
+						IDLE,
+						IDLE,
+						DEC16, SPl, SPh,
+						WR, SPl, SPh, PCl,
+						ASGN, W, 0,
+						ADDS, PCl, PCh, ALU, W,
+						OP };
+		}
+
 		private void INT_OP(ushort operation, ushort src)
 		{
 			cur_instr = new ushort[]
@@ -316,7 +337,7 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 						OP };
 		}
 
-		private void PUSH_(ushort src_l, ushort src_h)
+		private void PUSH_(ushort src)
 		{
 			cur_instr = new ushort[]
 						{IDLE,
@@ -326,33 +347,22 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 						IDLE,
 						DEC16, SPl, SPh,
 						IDLE,
-						WR, SPl, SPh, src_h,
-						IDLE,
-						DEC16, SPl, SPh,
-						IDLE,
-						WR, SPl, SPh, src_l,
-						IDLE,
-						IDLE,
-						IDLE,
+						WR, SPl, SPh, src,
 						OP };
 		}
 
 		// NOTE: this is the only instruction that can write to F
 		// but the bottom 4 bits of F are always 0, so instead of putting a special check for every read op
 		// let's just put a special operation here specifically for F
-		private void POP_(ushort src_l, ushort src_h)
+		private void POP_(ushort src)
 		{
-			if (src_l != P)
+			if (src != P)
 			{
 				cur_instr = new ushort[]
 							{IDLE,
 							IDLE,
 							IDLE,
-							RD, src_l, SPl, SPh,
-							IDLE,
-							INC16, SPl, SPh,
-							IDLE,
-							RD, src_h, SPl, SPh,
+							RD, src, SPl, SPh,
 							IDLE,
 							INC16, SPl, SPh,
 							IDLE,
@@ -364,11 +374,7 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 							{IDLE,
 							IDLE,
 							IDLE,
-							RD_F, src_l, SPl, SPh,
-							IDLE,
-							INC16, SPl, SPh,
-							IDLE,
-							RD, src_h, SPl, SPh,
+							RD_F, src, SPl, SPh,
 							IDLE,
 							INC16, SPl, SPh,
 							IDLE,
@@ -450,6 +456,66 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 			cur_instr = new ushort[]
 						{IDLE,
 						TR_16, dest_l, dest_h, src_l, src_h,
+						IDLE,
+						OP };
+		}
+
+		private void CP_16_IMM(ushort src_l, ushort src_h)
+		{
+			cur_instr = new ushort[]
+						{RD, Z, PCl, PCh,
+						INC16, PCl, PCh,
+						RD, W, PCl, PCh,
+						INC16, PCl, PCh,
+						CP16, Z, W, src_l, src_h,
+						IDLE,
+						OP };
+		}
+
+		private void REG_OP_IMM_INC(ushort operation, ushort dest, ushort src_l, ushort src_h)
+		{
+			cur_instr = new ushort[]
+						{IDLE,
+						IDLE,
+						IDLE,
+						RD, Z, src_l, src_h,
+						IDLE,
+						operation, dest, Z,
+						INC16, src_l, src_h,
+						OP };
+		}
+
+
+		private void LD_IMM_16(ushort dest_l, ushort dest_h, ushort src_l, ushort src_h)
+		{
+			cur_instr = new ushort[]
+						{IDLE,
+						IDLE,
+						IDLE,
+						RD, dest_l, src_l, src_h,
+						IDLE,
+						INC16, src_l, src_h,
+						IDLE,
+						RD, dest_h, src_l, src_h,
+						IDLE,
+						INC16, src_l, src_h,
+						IDLE,
+						OP };
+		}
+
+		private void LD_16_IMM(ushort dest_l, ushort dest_h, ushort src_l, ushort src_h)
+		{
+			cur_instr = new ushort[]
+						{IDLE,
+						IDLE,
+						IDLE,
+						WR, dest_l, dest_h, src_l,
+						IDLE,
+						INC16, dest_l, src_h,
+						IDLE,
+						WR, dest_l, dest_h, src_h,
+						IDLE,
+						INC16, dest_l, dest_h,
 						IDLE,
 						OP };
 		}

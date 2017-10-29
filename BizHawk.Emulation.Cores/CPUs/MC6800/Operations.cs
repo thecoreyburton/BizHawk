@@ -153,6 +153,11 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 			FlagC = false;
 		}
 
+		public void BIT8_Func(ushort dest, ushort src)
+		{
+			
+		}
+
 		public void AND8_Func(ushort dest, ushort src)
 		{
 			Regs[dest] = (ushort)(Regs[dest] & Regs[src]);
@@ -447,6 +452,31 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 			Regs[dest_h] += temp;
 			Regs[dest_h] &= 0xFF;
 
+		}
+
+		public void CP16_Func(ushort dest_l, ushort dest_h, ushort src_l, ushort src_h)
+		{
+			int Reg16_d = Regs[dest_l] | (Regs[dest_h] << 8);
+			int Reg16_s = Regs[src_l] | (Regs[src_h] << 8);
+
+			Reg16_d += Reg16_s;
+
+			FlagC = Reg16_d.Bit(16);
+
+			ushort ans_l = (ushort)(Reg16_d & 0xFF);
+			ushort ans_h = (ushort)((Reg16_d & 0xFF00) >> 8);
+
+			// redo for half carry flag
+			Reg16_d = Regs[dest_l] | ((Regs[dest_h] & 0x0F) << 8);
+			Reg16_s = Regs[src_l] | ((Regs[src_h] & 0x0F) << 8);
+
+			Reg16_d += Reg16_s;
+
+			FlagH = Reg16_d.Bit(12);
+			FlagN = false;
+
+			Regs[dest_l] = ans_l;
+			Regs[dest_h] = ans_h;
 		}
 	}
 }

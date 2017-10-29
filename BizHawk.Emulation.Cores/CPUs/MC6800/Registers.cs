@@ -17,8 +17,9 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 		public static ushort B = 7;
 		public static ushort P = 8;
 		public static ushort ALU = 9;
-		public static ushort W = 10;
-		public static ushort Z = 11;
+		public static ushort ALU2 = 10;
+		public static ushort W = 11;
+		public static ushort Z = 12;
 
 		public ushort[] Regs = new ushort[16];
 
