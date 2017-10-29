@@ -134,31 +134,6 @@
 						OP };
 		}
 
-		private void LD_R_IM(ushort dest_l, ushort dest_h, ushort src_l, ushort src_h)
-		{
-			cur_instr = new ushort[]
-						{IDLE,
-						IDLE,
-						IDLE,
-						RD, W, src_l, src_h,
-						IDLE,
-						INC16, src_l, src_h,
-						IDLE,
-						RD, Z, src_l, src_h,
-						IDLE,
-						INC16, src_l, src_h,
-						IDLE,
-						WR, W, Z, dest_l,
-						IDLE,
-						INC16, W, Z,
-						IDLE,
-						WR, W, Z, dest_h,
-						IDLE,
-						IDLE,
-						IDLE,
-						OP };
-		}
-
 		private void LD_8_IND_INC(ushort dest_l, ushort dest_h, ushort src)
 		{
 			cur_instr = new ushort[]
@@ -222,26 +197,6 @@
 						IDLE,
 						OP };
 		}
-
-		private void LD_8_IND_IND(ushort dest_l, ushort dest_h, ushort src_l, ushort src_h)
-		{
-			cur_instr = new ushort[]
-						{IDLE,
-						IDLE,
-						IDLE,
-						RD, Z, src_l, src_h,
-						IDLE,
-						INC16, src_l, src_h,
-						IDLE,
-						WR, dest_l, dest_h, Z,
-						IDLE,
-						IDLE,
-						IDLE,
-						OP };
-		}
-
-
-
 
 		private void LD_ZP_16(ushort dest_l, ushort dest_h, ushort src_l, ushort src_h)
 		{

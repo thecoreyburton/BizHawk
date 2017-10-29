@@ -403,45 +403,6 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 						OP };
 		}
 
-		private void DI_()
-		{
-			cur_instr = new ushort[]
-						{DI,
-						IDLE,
-						IDLE,
-						OP };
-		}
-
-		private void EI_()
-		{
-			cur_instr = new ushort[]
-						{EI,
-						IDLE,
-						IDLE,
-						OP };
-		}
-
-		private void ADD_SP()
-		{
-			cur_instr = new ushort[]
-						{IDLE,
-						IDLE,
-						IDLE,
-						IDLE,
-						IDLE,
-						RD, W, PCl, PCh,
-						IDLE,
-						INC16, PCl, PCh,
-						IDLE,
-						ASGN, Z, 0,
-						IDLE,
-						ADDS, SPl, SPh, W, Z,
-						IDLE,
-						IDLE,
-						IDLE,
-						OP };
-		}
-
 		private void JAM_()
 		{
 			cur_instr = new ushort[]

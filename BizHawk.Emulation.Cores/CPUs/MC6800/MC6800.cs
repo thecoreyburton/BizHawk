@@ -47,7 +47,6 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 		public const ushort DI = 34;
 		public const ushort HALT = 35;
 		public const ushort STOP = 36;
-		public const ushort PREFIX = 37;
 		public const ushort ASGN = 38;
 		public const ushort ADDS = 39; // signed 16 bit operation used in 2 instructions
 		public const ushort OP_G = 40; // glitchy opcode read performed by halt when interrupts disabled
@@ -115,7 +114,7 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 					break;
 				case OP:
 					// Read the opcode of the next instruction				
-					if (EI_pending > 0 && !CB_prefix)
+					if (EI_pending > 0)
 					{
 						EI_pending--;
 						if (EI_pending == 0)
@@ -124,7 +123,7 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 						}
 					}
 
-					if (FlagI && interrupts_enabled && !CB_prefix && !jammed)
+					if (FlagI && interrupts_enabled && !jammed)
 					{
 						interrupts_enabled = false;
 
@@ -155,7 +154,7 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 					else
 					{
 						if (OnExecFetch != null) OnExecFetch(RegPC);
-						if (TraceCallback != null && !CB_prefix) TraceCallback(State());
+						if (TraceCallback != null) TraceCallback(State());
 						FetchInstruction(ReadMemory(RegPC++));
 					}
 					instr_pntr = 0;
@@ -254,7 +253,7 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 				case HALT:
 					halted = true;
 
-					if (EI_pending > 0 && !CB_prefix)
+					if (EI_pending > 0)
 					{
 						EI_pending--;
 						if (EI_pending == 0)
@@ -265,7 +264,7 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 
 					// if the I flag is asserted at the time of halt, don't halt
 
-					if (FlagI && interrupts_enabled && !CB_prefix && !jammed)
+					if (FlagI && interrupts_enabled && !jammed)
 					{
 						interrupts_enabled = false;
 
@@ -308,7 +307,7 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 						}
 						halted = false;
 						if (OnExecFetch != null) OnExecFetch(RegPC);
-						if (TraceCallback != null && !CB_prefix) TraceCallback(State());
+						if (TraceCallback != null) TraceCallback(State());
 						FetchInstruction(ReadMemory(RegPC++));
 						instr_pntr = 0;
 					}
@@ -338,7 +337,7 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 
 						stopped = false;
 						if (OnExecFetch != null) OnExecFetch(RegPC);
-						if (TraceCallback != null && !CB_prefix) TraceCallback(State());
+						if (TraceCallback != null) TraceCallback(State());
 						FetchInstruction(ReadMemory(RegPC++));
 						instr_pntr = 0;
 					}
@@ -351,9 +350,6 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 						IDLE,
 						STOP };
 					}
-					break;
-				case PREFIX:
-					CB_prefix = true;
 					break;
 				case ASGN:
 					ASGN_Func(cur_instr[instr_pntr++], cur_instr[instr_pntr++]);
@@ -453,7 +449,6 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 
 			ser.Sync("instruction_pointer", ref instr_pntr);
 			ser.Sync("current instruction", ref cur_instr, false);
-			ser.Sync("CB Preifx", ref CB_prefix);
 			ser.Sync("Stopped", ref stopped);
 			ser.Sync("opcode", ref opcode);
 			ser.Sync("jammped", ref jammed);
