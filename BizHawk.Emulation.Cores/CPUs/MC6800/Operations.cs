@@ -370,10 +370,10 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 		}
 
 		// used for signed operations
-		public void ADDS_Func(ushort dest_l, ushort dest_h, ushort src_l, ushort src_h)
+		public void ADDS_Func(ushort dest_l, ushort dest_h, ushort src)
 		{
 			int Reg16_d = Regs[dest_l];
-			int Reg16_s = Regs[src_l];
+			int Reg16_s = Regs[src];
 
 			Reg16_d += Reg16_s;
 
@@ -405,7 +405,7 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 
 				// redo for half carry flag
 				Reg16_d = Regs[dest_l] & 0xF;
-				Reg16_d += Regs[src_l] & 0xF;
+				Reg16_d += Regs[src] & 0xF;
 
 				FlagH = Reg16_d.Bit(4);
 				FlagN = false;

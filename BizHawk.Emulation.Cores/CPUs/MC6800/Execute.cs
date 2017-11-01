@@ -119,22 +119,22 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 				case 0x5D: INT_OP(TST, B);							break; // TST B
 				case 0x5E: JAM_();									break; // JAM
 				case 0x5F: INT_OP(CLR, B);							break; // CLR B
-				case 0x60: I_INT_OP_IND(NEG8, Ixl, Ixh);			break; // NEG (Ix + n)
+				case 0x60: INT_OP_INDX(NEG8, Ixl, Ixh);				break; // NEG (Ix + n)
 				case 0x61: JAM_();									break; // JAM
 				case 0x62: JAM_();									break; // JAM
-				case 0x63: I_INT_OP_IND(CPL, Ixl, Ixh);				break; // COM (Ix + n)
-				case 0x64: I_INT_OP_IND(LSR, Ixl, Ixh);				break; // LSR (Ix + n)
+				case 0x63: INT_OP_INDX(CPL, Ixl, Ixh);				break; // COM (Ix + n)
+				case 0x64: INT_OP_INDX(LSR, Ixl, Ixh);				break; // LSR (Ix + n)
 				case 0x65: JAM_();									break; // JAM
-				case 0x66: I_INT_OP_IND(ROR, Ixl, Ixh);				break; // ROR (Ix + n)
-				case 0x67: I_INT_OP_IND(ASR, Ixl, Ixh);				break; // ASR (Ix + n)
-				case 0x68: I_INT_OP_IND(ASL, Ixl, Ixh);				break; // ASL (Ix + n)
-				case 0x69: I_INT_OP_IND(ROL, Ixl, Ixh);				break; // ROL (Ix + n)
-				case 0x6A: I_INT_OP_IND(DEC8, Ixl, Ixh);			break; // DEC (Ix + n)
+				case 0x66: INT_OP_INDX(ROR, Ixl, Ixh);				break; // ROR (Ix + n)
+				case 0x67: INT_OP_INDX(ASR, Ixl, Ixh);				break; // ASR (Ix + n)
+				case 0x68: INT_OP_INDX(ASL, Ixl, Ixh);				break; // ASL (Ix + n)
+				case 0x69: INT_OP_INDX(ROL, Ixl, Ixh);				break; // ROL (Ix + n)
+				case 0x6A: INT_OP_INDX(DEC8, Ixl, Ixh);				break; // DEC (Ix + n)
 				case 0x6B: JAM_();									break; // JAM
-				case 0x6C: I_INT_OP_IND(INC8, Ixl, Ixh);			break; // INC (Ix + n)
-				case 0x6D: I_INT_OP_IND(TST, Ixl, Ixh);				break; // TST (Ix + n)
-				case 0x6E: I_JP_IND(Ixl, Ixh);						break; // JMP (Ix + n)
-				case 0x6F: I_INT_OP_IND(CLR, Ixl, Ixh);				break; // CLR (Ix + n)
+				case 0x6C: INT_OP_INDX(INC8, Ixl, Ixh);				break; // INC (Ix + n)
+				case 0x6D: INT_OP_INDX(TST, Ixl, Ixh);				break; // TST (Ix + n)
+				case 0x6E: JP_INDX(Ixl, Ixh);						break; // JMP (Ix + n)
+				case 0x6F: INT_OP_INDX(CLR, Ixl, Ixh);				break; // CLR (Ix + n)
 				case 0x70: INT_OP_EXT(NEG8);						break; // NEG (nn)
 				case 0x71: JAM_();									break; // JAM
 				case 0x72: JAM_();									break; // JAM
@@ -157,8 +157,8 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 				case 0x83: JAM_();									break; // JAM
 				case 0x84: REG_OP_IMM(AND8, A, PCl, PCh);			break; // AND A, n
 				case 0x85: REG_OP_IMM(BIT8, A, PCl, PCh);			break; // BIT A, n
-				case 0x86: LD_IND_8_INC(A, PCl, PCh);				break; // LD A, n
-				case 0x87: LD_8_IND_INC(PCl, PCh, A);				break; // ST A, n
+				case 0x86: LD_IMM_8(A, PCl, PCh);					break; // LD A, n
+				case 0x87: LD_8_IMM(PCl, PCh, A);					break; // ST A, n
 				case 0x88: REG_OP_IMM(XOR8, A, PCl, PCh);			break; // XOR A, n
 				case 0x89: REG_OP_IMM(ADC8, A, PCl, PCh);			break; // ADC A, n
 				case 0x8A: REG_OP_IMM(OR8, A, PCl, PCh);			break; // OR A, n
@@ -173,8 +173,8 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 				case 0x93: JAM_();									break; // JAM
 				case 0x94: REG_OP_ZP(AND8, A, PCl, PCh);			break; // AND A, zp(n)
 				case 0x95: REG_OP_ZP(BIT8, A, PCl, PCh);			break; // BIT A, zp(n)
-				case 0x96: LD_IND_8_ZP(A, PCl, PCh);				break; // LD A, zp(n)
-				case 0x97: LD_8_IND_ZP(PCl, PCh, A);				break; // ST A, zp(n)
+				case 0x96: LD_ZP_8(A, PCl, PCh);					break; // LD A, zp(n)
+				case 0x97: LD_8_ZP(PCl, PCh, A);					break; // ST A, zp(n)
 				case 0x98: REG_OP_ZP(XOR8, A, PCl, PCh);			break; // XOR A, zp(n)
 				case 0x99: REG_OP_ZP(ADC8, A, PCl, PCh);			break; // ADC A, zp(n)
 				case 0x9A: REG_OP_ZP(OR8, A, PCl, PCh);				break; // OR A, zp(n)
@@ -183,22 +183,22 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 				case 0x9D: JAM_();									break; // JAM
 				case 0x9E: LD_ZP_16(SPl, SPh, PCl, PCh);			break; // LD SP, zp(n)
 				case 0x9F: LD_16_ZP(PCl, PCh, SPl, SPh);			break; // LD zp(n), SP
-				case 0xA0: I_REG_OP(SUB8, A);						break; // SUB A, (Ix + n)
-				case 0xA1: I_REG_OP(CP8, A);						break; // CMP A, (Ix + n)
-				case 0xA2: I_REG_OP(SBC8, A);						break; // SBC A, (Ix + n)
+				case 0xA0: REG_OP_INDX(SUB8, A);					break; // SUB A, (Ix + n)
+				case 0xA1: REG_OP_INDX(CP8, A);						break; // CMP A, (Ix + n)
+				case 0xA2: REG_OP_INDX(SBC8, A);					break; // SBC A, (Ix + n)
 				case 0xA3: JAM_();									break; // JAM
-				case 0xA4: I_REG_OP(AND8, A);						break; // AND A, (Ix + n)
-				case 0xA5: I_REG_OP(BIT8, A);						break; // BIT A, (Ix + n)
-				case 0xA6: LD_I_8(A);								break; // LD A, (Ix + n)
-				case 0xA7: LD_8_I(A);								break; // ST A, (Ix + n)
-				case 0xA8: I_REG_OP(XOR8, A);						break; // XOR A, (Ix + n)
-				case 0xA9: I_REG_OP(ADC8, A);						break; // ADC A, (Ix + n)
-				case 0xAA: I_REG_OP(OR8, A);						break; // OR A, (Ix + n)
-				case 0xAB: I_REG_OP(ADD8, A);						break; // ADD A, (Ix + n)
-				case 0xAC: CP_16_I();								break; // CMP Ix, (Ix + n)
-				case 0xAD: I_JSR();									break; // JSR 
-				case 0xAE: LD_I_16(SPl, SPh);						break; // LD SP, (Ix + n)
-				case 0xAF: LD_16_I(SPl, SPh);						break; // LD (Ix + n), SP
+				case 0xA4: REG_OP_INDX(AND8, A);					break; // AND A, (Ix + n)
+				case 0xA5: REG_OP_INDX(BIT8, A);					break; // BIT A, (Ix + n)
+				case 0xA6: LD_INDX_8(A);							break; // LD A, (Ix + n)
+				case 0xA7: LD_8_INDX(A);							break; // ST A, (Ix + n)
+				case 0xA8: REG_OP_INDX(XOR8, A);					break; // XOR A, (Ix + n)
+				case 0xA9: REG_OP_INDX(ADC8, A);					break; // ADC A, (Ix + n)
+				case 0xAA: REG_OP_INDX(OR8, A);						break; // OR A, (Ix + n)
+				case 0xAB: REG_OP_INDX(ADD8, A);					break; // ADD A, (Ix + n)
+				case 0xAC: CP_16_INDX();							break; // CMP Ix, (Ix + n)
+				case 0xAD: JSR_INDX();								break; // JSR (Ix + n)
+				case 0xAE: LD_INDX_16(SPl, SPh);					break; // LD SP, (Ix + n)
+				case 0xAF: LD_16_INDX(SPl, SPh);					break; // LD (Ix + n), SP
 				case 0xB0: REG_OP_EXT(SUB8, A);						break; // SUB A, (nn)
 				case 0xB1: REG_OP_EXT(CP8, A);						break; // CMP A, (nn)
 				case 0xB2: REG_OP_EXT(SBC8, A);						break; // SBC A, (nn)
@@ -221,8 +221,8 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 				case 0xC3: JAM_();									break; // JAM
 				case 0xC4: REG_OP_IMM(AND8, B, PCl, PCh);			break; // AND B, n
 				case 0xC5: REG_OP_IMM(BIT8, B, PCl, PCh);			break; // BIT B, n
-				case 0xC6: LD_IND_8_INC(B, PCl, PCh);				break; // LD B, n
-				case 0xC7: LD_8_IND_INC(PCl, PCh, B);				break; // ST B, n
+				case 0xC6: LD_IMM_8(B, PCl, PCh);					break; // LD B, n
+				case 0xC7: LD_8_IMM(PCl, PCh, B);					break; // ST B, n
 				case 0xC8: REG_OP_IMM(XOR8, B, PCl, PCh);			break; // XOR B, n
 				case 0xC9: REG_OP_IMM(ADC8, B, PCl, PCh);			break; // ADC B, n
 				case 0xCA: REG_OP_IMM(OR8, B, PCl, PCh);			break; // OR B, n
@@ -237,8 +237,8 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 				case 0xD3: JAM_();									break; // JAM
 				case 0xD4: REG_OP_ZP(AND8, B, PCl, PCh);			break; // AND B, zp(n)
 				case 0xD5: REG_OP_ZP(BIT8, B, PCl, PCh);			break; // BIT B, zp(n)
-				case 0xD6: LD_IND_8_ZP(A, PCl, PCh);				break; // LD B, zp(n)
-				case 0xD7: LD_8_IND_ZP(PCl, PCh, B);				break; // ST B, zp(n)
+				case 0xD6: LD_ZP_8(A, PCl, PCh);					break; // LD B, zp(n)
+				case 0xD7: LD_8_ZP(PCl, PCh, B);					break; // ST B, zp(n)
 				case 0xD8: REG_OP_ZP(XOR8, B, PCl, PCh);			break; // XOR B, zp(n)
 				case 0xD9: REG_OP_ZP(ADC8, B, PCl, PCh);			break; // ADC B, zp(n)
 				case 0xDA: REG_OP_ZP(OR8, B, PCl, PCh);				break; // OR B, zp(n)
@@ -247,22 +247,22 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 				case 0xDD: JAM_();									break; // JAM
 				case 0xDE: LD_ZP_16(Ixl, Ixh, PCl, PCh);			break; // LD Ix, zp(n)
 				case 0xDF: LD_16_ZP(PCl, PCh, Ixl, Ixh);			break; // LD zp(n), Ix
-				case 0xE0: I_REG_OP(SUB8, B);						break; // SUB B, (Ix + n)
-				case 0xE1: I_REG_OP(CP8, B);						break; // CMP B, (Ix + n)
-				case 0xE2: I_REG_OP(SBC8, B);						break; // SBC B, (Ix + n)
+				case 0xE0: REG_OP_INDX(SUB8, B);					break; // SUB B, (Ix + n)
+				case 0xE1: REG_OP_INDX(CP8, B);						break; // CMP B, (Ix + n)
+				case 0xE2: REG_OP_INDX(SBC8, B);					break; // SBC B, (Ix + n)
 				case 0xE3: JAM_();									break; // JAM
-				case 0xE4: I_REG_OP(AND8, B);						break; // AND B, (Ix + n)
-				case 0xE5: I_REG_OP(BIT8, B);						break; // BIT B, (Ix + n)
-				case 0xE6: LD_I_8(B);								break; // LD B, (Ix + n)
-				case 0xE7: LD_8_I(B);								break; // ST B, (Ix + n)
-				case 0xE8: I_REG_OP(XOR8, B);						break; // XOR B, (Ix + n)
-				case 0xE9: I_REG_OP(ADC8, B);						break; // ADC B, (Ix + n)
-				case 0xEA: I_REG_OP(OR8, B);						break; // OR B, (Ix + n)
-				case 0xEB: I_REG_OP(ADD8, B);						break; // ADD B, (Ix + n)
+				case 0xE4: REG_OP_INDX(AND8, B);					break; // AND B, (Ix + n)
+				case 0xE5: REG_OP_INDX(BIT8, B);					break; // BIT B, (Ix + n)
+				case 0xE6: LD_INDX_8(B);							break; // LD B, (Ix + n)
+				case 0xE7: LD_8_INDX(B);							break; // ST B, (Ix + n)
+				case 0xE8: REG_OP_INDX(XOR8, B);					break; // XOR B, (Ix + n)
+				case 0xE9: REG_OP_INDX(ADC8, B);					break; // ADC B, (Ix + n)
+				case 0xEA: REG_OP_INDX(OR8, B);						break; // OR B, (Ix + n)
+				case 0xEB: REG_OP_INDX(ADD8, B);					break; // ADD B, (Ix + n)
 				case 0xEC: JAM_();									break; // JAM
 				case 0xED: JAM_();									break; // JAM
-				case 0xEE: LD_I_16(Ixl, Ixh);						break; // LD Ix, (Ix + n)
-				case 0xEF: LD_16_I(Ixl, Ixh);						break; // LD (Ix + n), Ix
+				case 0xEE: LD_INDX_16(Ixl, Ixh);					break; // LD Ix, (Ix + n)
+				case 0xEF: LD_16_INDX(Ixl, Ixh);					break; // LD (Ix + n), Ix
 				case 0xF0: REG_OP_EXT(SUB8, B);						break; // SUB B, (nn)
 				case 0xF1: REG_OP_EXT(CP8, B);						break; // CMP B, (nn)
 				case 0xF2: REG_OP_EXT(SBC8, B);						break; // SBC B, (nn)

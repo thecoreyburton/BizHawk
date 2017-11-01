@@ -265,7 +265,7 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 					ASGN_Func(cur_instr[instr_pntr++], cur_instr[instr_pntr++]);
 					break;
 				case ADDS:
-					ADDS_Func(cur_instr[instr_pntr++], cur_instr[instr_pntr++], cur_instr[instr_pntr++], cur_instr[instr_pntr++]);
+					ADDS_Func(cur_instr[instr_pntr++], cur_instr[instr_pntr++], cur_instr[instr_pntr++]);
 					break;
 				case JAM:
 					jammed = true;
