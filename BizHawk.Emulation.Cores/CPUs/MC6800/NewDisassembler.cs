@@ -4,7 +4,7 @@ using System.Text;
 
 namespace BizHawk.Emulation.Common.Cores.MC6800
 {
-	public sealed partial class MC6800
+	public sealed partial class MC6800 : IDisassemblable
 	{
 		static string[] table =
 		{
@@ -320,6 +320,32 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 			ret.Append(result);
 			size = (ushort)(addr - origaddr);
 			return ret.ToString();
+		}
+
+
+		public string Cpu
+		{
+			get { return "MC6800"; }
+			set { }
+		}
+
+		public string PCRegisterName
+		{
+			get { return "PC"; }
+		}
+
+		public IEnumerable<string> AvailableCpus
+		{
+			get { yield return "MC6800"; }
+		}
+
+		public string Disassemble(MemoryDomain m, uint addr, out int length)
+		{
+			int loc = (int)addr;
+			ushort unused = 0;
+			string ret = Disassemble((ushort)addr, a => m.PeekByte(a), out unused);
+			length = loc - (int)addr;
+			return ret;
 		}
 	}
 }

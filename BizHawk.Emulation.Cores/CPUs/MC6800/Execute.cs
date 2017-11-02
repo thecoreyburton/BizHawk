@@ -8,7 +8,7 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 		public int TotalExecutedCycles { get { return totalExecutedCycles; } set { totalExecutedCycles = value; } }
 
 		private int EI_pending;
-		private bool interrupts_enabled;
+		public bool interrupts_enabled;
 
 		// variables for executing instructions
 		public int instr_pntr = 0;
