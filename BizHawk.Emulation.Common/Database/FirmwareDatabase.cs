@@ -30,7 +30,10 @@ namespace BizHawk.Emulation.Common
 			FirmwareAndOption("5A140136A16D1D83E4FF32A19409CA376A8DF874", 16384, "A78", "Bios_PAL", "7800PALBIOS.bin", "PAL Bios");
 			FirmwareAndOption("A3AF676991391A6DD716C79022D4947206B78164", 4096, "A78", "Bios_HSC", "7800highscore.bin", "Highscore Bios");
 			FirmwareAndOption("45BEDC4CBDEAC66C7DF59E9E599195C778D86A92", 8192, "Coleco", "Bios", "ColecoBios.bin", "Bios");
+			FirmwareAndOption("72DA492092B883EB31CFFB41EA353E919C86D285", 4096, "MP1000", "Bios_NTSC", "apf1013a.bin", "NTSC Bios");
+			FirmwareAndOption("B3CFC23C65558EF7B67C9AFA01A306C8123E227F", 4096, "MP1000", "Bios_NTSC", "apf1013b.bin", "NTSC Bios");
 
+			
 			var gbaNormal = File("300C20DF6731A33952DED8C436F7F186D25D3492", 16384, "gbabios.rom", "Bios (World)");
 			var gbaJDebug = File("AA98A2AD32B86106340665D1222D7D973A1361C7", 16384, "gbabios.rom", "Bios (J Debug)");
 			Firmware("GBA", "Bios", "Bios");
