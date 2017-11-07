@@ -73,8 +73,6 @@ namespace BizHawk.Emulation.Cores.APF.MP1000
 			ser.Sync("cpu_halt_pending", ref cpu_halt_pending);
 			ser.Sync("cpu_resume_pending", ref cpu_resume_pending);
 
-			ser.Sync("slow_access", ref slow_access);
-			ser.Sync("slow_access", ref slow_countdown);
 			ser.Sync("Cart RAM", ref cart_RAM);
 			ser.Sync("left_toggle", ref left_toggle);
 			ser.Sync("right_toggle", ref right_toggle);

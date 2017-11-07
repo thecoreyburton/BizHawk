@@ -73,24 +73,12 @@ namespace BizHawk.Emulation.Cores.APF.MP1000
 			_syncSettings = (MP1000SyncSettings)syncSettings ?? new MP1000SyncSettings();
 			_controllerDeck = new MP1000ControllerDeck(_syncSettings.Port1, _syncSettings.Port2);
 
-			byte[] ntscBios = comm.CoreFileProvider.GetFirmware("A78", "Bios_NTSC", false, "The game will not run if the correct region BIOS is not available.");
+			byte[] ntscBios = comm.CoreFileProvider.GetFirmware("MP1000", "Bios_NTSC", false, "The game will not run if the correct region BIOS is not available.");
 
 			byte[] header = new byte[128];
-			bool is_header = false;
 
-			if (rom.Length % 1024 == 128)
-			{
-				Console.WriteLine("128 byte header detected");
-				byte[] newrom = new byte[rom.Length - 128];
-				is_header = true;
-				Buffer.BlockCopy(rom, 0, header, 0, 128);
-				Buffer.BlockCopy(rom, 128, newrom, 0, newrom.Length);
-				rom = newrom;
-			}
-
-			// look up hash in gamedb to see what mapper to use
-			// if none found default is zero
-			// also check for PAL region
+			// look up hash in gamedb 
+			// only a few games exist for this console
 			string hash_md5 = null;
 			s_mapper = null;
 			hash_md5 = "md5:" + rom.HashMD5(0, rom.Length);
@@ -116,33 +104,6 @@ namespace BizHawk.Emulation.Cores.APF.MP1000
 					int.TryParse(dict["RAM"], out cart_RAM);
 					Console.WriteLine(cart_RAM);
 				}
-			}
-			else if (is_header)
-			{
-				Console.WriteLine("ROM not in DB, inferring mapper info from header");
-
-				byte cart_1 = header[0x35];
-				byte cart_2 = header[0x36];
-
-				if (cart_2.Bit(1))
-				{
-					if (cart_2.Bit(3))
-					{
-						s_mapper = "2";
-					}
-					else
-					{
-						s_mapper = "1";
-					}					
-				}
-				else
-				{
-					s_mapper = "0";
-				}
-			}
-			else
-			{
-				throw new Exception("ROM not in gamedb and has no header");
 			}
 
 			_rom = rom;

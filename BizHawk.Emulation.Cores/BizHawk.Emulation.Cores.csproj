@@ -256,6 +256,34 @@
     <Compile Include="Computers\Commodore64\MOS\Vic.VideoProvider.cs" />
     <Compile Include="Computers\Commodore64\SaveState.cs" />
     <Compile Include="Computers\Commodore64\User\UserPortDevice.cs" />
+	<Compile Include="Consoles\APF\MP1000\MP1000.cs" />
+    <Compile Include="Consoles\APF\MP1000\MP1000.IDebuggable.cs">
+	  <DependentUpon>MP1000.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Consoles\APF\MP1000\MP1000.IEmulator.cs">
+	  <DependentUpon>MP1000.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Consoles\APF\MP1000\MP1000.IInputPollable.cs">
+	  <DependentUpon>MP1000.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Consoles\APF\MP1000\MP1000.IMemoryDomains.cs">
+	  <DependentUpon>MP1000.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Consoles\APF\MP1000\MP1000.ISaveRam.cs">
+	  <DependentUpon>MP1000.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Consoles\APF\MP1000\MP1000.ISettable.cs">
+	  <DependentUpon>MP1000.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Consoles\APF\MP1000\MP1000.IStatable.cs">
+	  <DependentUpon>MP1000.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Consoles\APF\MP1000\MP1000ControllerDeck.cs" />
+    <Compile Include="Consoles\APF\MP1000\MP1000Controllers.cs" />
+    <Compile Include="Consoles\APF\MP1000\MC6821.cs" />
+    <Compile Include="Consoles\APF\MP1000\MC6847.cs" />
+    <Compile Include="Consoles\APF\MP1000\MemoryMap.cs" />
+    <Compile Include="Consoles\APF\MP1000\Pokey.cs" />
     <Compile Include="Consoles\Atari\2600\Atari2600.cs" />
     <Compile Include="Consoles\Atari\2600\Atari2600.Core.cs">
       <DependentUpon>Atari2600.cs</DependentUpon>
@@ -1161,6 +1189,13 @@
     <Compile Include="CPUs\CP1610\CP1610.Disassembler.cs" />
     <Compile Include="CPUs\CP1610\CP1610.Execute.cs" />
     <Compile Include="CPUs\HuC6280\HuC6280_CDL.cs" />
+	<Compile Include="CPUs\MC6800\Execute.cs" />
+    <Compile Include="CPUs\MC6800\Interrupts.cs" />
+    <Compile Include="CPUs\MC6800\MC6800.cs" />
+    <Compile Include="CPUs\MC6800\NewDisassembler.cs" />
+    <Compile Include="CPUs\MC6800\Operations.cs" />
+    <Compile Include="CPUs\MC6800\Registers.cs" />
+    <Compile Include="CPUs\MC6800\Tables_Direct.cs" />
     <Compile Include="CPUs\W65816\Disassembler.cs" />
     <Compile Include="CPUs\68000\Diassembler.cs" />
     <Compile Include="CPUs\68000\Instructions\BitArithemetic.cs" />

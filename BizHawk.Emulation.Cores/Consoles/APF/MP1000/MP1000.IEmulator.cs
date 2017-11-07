@@ -31,26 +31,6 @@ namespace BizHawk.Emulation.Cores.APF.MP1000
 		public bool right_toggle;
 		public bool left_was_pressed;
 		public bool right_was_pressed;
-		public bool p1_is_2button;
-		public bool p2_is_2button;
-		public bool p1_is_lightgun;
-		public bool p2_is_lightgun;
-		public float p1_lightgun_x;
-		public float p1_lightgun_y;
-		public float p2_lightgun_x;
-		public float p2_lightgun_y;
-		public int lg_1_counting_down;
-		public int lg_1_counting_down_2;
-		public int lg_2_counting_down;
-		public int lg_2_counting_down_2;
-		public byte lg_1_trigger_hit;
-		public byte lg_2_trigger_hit;
-
-		// there are 4 maria cycles in a CPU cycle (fast access, both NTSC and PAL)
-		// if the 6532 or TIA are accessed (PC goes to one of those addresses) the next access will be slower by 1/2 a CPU cycle
-		// i.e. it will take 6 Maria cycles instead of 4
-		public bool slow_access = false;
-		public int slow_countdown;
 
 		public void FrameAdvance(IController controller, bool render, bool rendersound)
 		{
@@ -67,8 +47,6 @@ namespace BizHawk.Emulation.Cores.APF.MP1000
 
 			if (controller.IsPressed("Power"))
 			{
-				// it seems that theMachine.Reset() doesn't clear ram, etc
-				// this should leave hsram intact but clear most other things
 				HardReset();
 			}
 
@@ -85,82 +63,15 @@ namespace BizHawk.Emulation.Cores.APF.MP1000
 			}
 		}
 
+		// 4 ppu cycles in  a cpu cycle
 		public void RunCPUCycle()
 		{
-			if (slow_countdown==0)
+			cpu_cycle++;
+
+			if (cpu_cycle == 4)
 			{
-				cpu_cycle++;
-			}
-			else
-			{
-				slow_countdown--;
-			}
-
-			if (p1_is_lightgun)
-			{
-				if (lg_1_counting_down > 0)
-				{
-					lg_1_counting_down--;
-					if (lg_1_counting_down == 0 && lg_1_counting_down_2 > 0)
-					{
-						lg_1_trigger_hit = 0;
-						lg_1_counting_down = 454;
-						lg_1_counting_down_2--;
-					}
-
-					if (lg_1_counting_down < 424)
-					{
-						lg_1_trigger_hit = 0x80;
-					}
-				}
-
-				if ((mc6847.scanline - 20) == (p1_lightgun_y - 4))
-				{
-					if (mc6847.cycle == (132 + p1_lightgun_x))
-					{ 
-						// return true 64 cycles into the future
-						lg_1_counting_down = 64;
-						lg_1_counting_down_2 = 9;
-					}			
-				}
-			}
-
-			if (p2_is_lightgun)
-			{
-				if (lg_2_counting_down > 0)
-				{
-					lg_2_counting_down--;
-					if (lg_2_counting_down == 0 && lg_2_counting_down_2 > 0)
-					{
-						lg_2_trigger_hit = 0;
-						lg_2_counting_down = 454;
-						lg_2_counting_down_2--;
-					}
-
-					if (lg_2_counting_down < 424)
-					{
-						lg_2_trigger_hit = 0x80;
-					}
-				}
-
-				if ((mc6847.scanline - 20) == (p2_lightgun_y - 4))
-				{
-					if (mc6847.cycle == (132 + p2_lightgun_x))
-					{
-						// return true 64 cycles into the future
-						lg_2_counting_down = 64;
-						lg_2_counting_down_2 = 9;
-					}					
-				}
-			}
-
-
-			// tick the m6532 timer, which is still active although not recommended to use
-			// also it runs off of the cpu cycle timer
-			// similarly tick the pokey if it is in use
-			if (cpu_cycle== 4)
-			{
-				mc6821.Timer.Tick();
+				cpu.ExecuteOne();
+				cpu_cycle = 0;
 			}
 		}
 
@@ -174,10 +85,6 @@ namespace BizHawk.Emulation.Cores.APF.MP1000
 			p2_fire = _controllerDeck.ReadFire2(controller);
 			p1_fire_2x = _controllerDeck.ReadFire1_2x(controller);
 			p2_fire_2x = _controllerDeck.ReadFire2_2x(controller);
-			p1_is_2button = _controllerDeck.Is_2_button1(controller);
-			p2_is_2button = _controllerDeck.Is_2_button2(controller);
-			p1_is_lightgun = _controllerDeck.Is_LightGun1(controller, out p1_lightgun_x, out p1_lightgun_y);
-			p2_is_lightgun = _controllerDeck.Is_LightGun2(controller, out p2_lightgun_x, out p2_lightgun_y);
 		}
 
 		public void GetConsoleState(IController controller)

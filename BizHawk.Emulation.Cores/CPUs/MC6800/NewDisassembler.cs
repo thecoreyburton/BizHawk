@@ -72,198 +72,198 @@ namespace BizHawk.Emulation.Common.Cores.MC6800
 			"???", // 3d
 			"WAI", // 3e
 			"SWI", // 3f
-			"LD   B,B", // 40
-			"LD   B,C", // 41
-			"LD   B,D", // 42
-			"LD   B,E", // 43
-			"LD   B,H", // 44
-			"LD   B,L", // 45
-			"LD   B,(HL)", // 46
-			"LD   B,A", // 47
-			"LD   C,B", // 48
-			"LD   C,C", // 49
-			"LD   C,D", // 4a
-			"LD   C,E", // 4b
-			"LD   C,H", // 4c
-			"LD   C,L", // 4d
-			"LD   C,(HL)", // 4e
-			"LD   C,A", // 4f
-			"LD   D,B", // 50
-			"LD   D,C", // 51
-			"LD   D,D", // 52
-			"LD   D,E", // 53
-			"LD   D,H", // 54
-			"LD   D,L", // 55
-			"LD   D,(HL)", // 56
-			"LD   D,A", // 57
-			"LD   E,B", // 58
-			"LD   E,C", // 59
-			"LD   E,D", // 5a
-			"LD   E,E", // 5b
-			"LD   E,H", // 5c
-			"LD   E,L", // 5d
-			"LD   E,(HL)", // 5e
-			"LD   E,A", // 5f
-			"LD   H,B", // 60
-			"LD   H,C", // 61
-			"LD   H,D", // 62
-			"LD   H,E", // 63
-			"LD   H,H", // 64
-			"LD   H,L", // 65
-			"LD   H,(HL)", // 66
-			"LD   H,A", // 67
-			"LD   L,B", // 68
-			"LD   L,C", // 69
-			"LD   L,D", // 6a
-			"LD   L,E", // 6b
-			"LD   L,H", // 6c
-			"LD   L,L", // 6d
-			"LD   L,(HL)", // 6e
-			"LD   L,A", // 6f
-			"LD   (HL),B", // 70
-			"LD   (HL),C", // 71
-			"LD   (HL),D", // 72
-			"LD   (HL),E", // 73
-			"LD   (HL),H", // 74
-			"LD   (HL),L", // 75
-			"HALT", // 76
-			"LD   (HL),A", // 77
-			"LD   A,B", // 78
-			"LD   A,C", // 79
-			"LD   A,D", // 7a
-			"LD   A,E", // 7b
-			"LD   A,H", // 7c
-			"LD   A,L", // 7d
-			"LD   A,(HL)", // 7e
-			"LD   A,A", // 7f
-			"ADD  A,B", // 80
-			"ADD  A,C", // 81
-			"ADD  A,D", // 82
-			"ADD  A,E", // 83
-			"ADD  A,H", // 84
-			"ADD  A,L", // 85
-			"ADD  A,(HL)", // 86
-			"ADD  A,A", // 87
-			"ADC  A,B", // 88
-			"ADC  A,C", // 89
-			"ADC  A,D", // 8a
-			"ADC  A,E", // 8b
-			"ADC  A,H", // 8c
-			"ADC  A,L", // 8d
-			"ADC  A,(HL)", // 8e
-			"ADC  A,A", // 8f
-			"SUB  B", // 90
-			"SUB  C", // 91
-			"SUB  D", // 92
-			"SUB  E", // 93
-			"SUB  H", // 94
-			"SUB  L", // 95
-			"SUB  (HL)", // 96
-			"SUB  A", // 97
-			"SBC  A,B", // 98
-			"SBC  A,C", // 99
-			"SBC  A,D", // 9a
-			"SBC  A,E", // 9b
-			"SBC  A,H", // 9c
-			"SBC  A,L", // 9d
-			"SBC  A,(HL)", // 9e
-			"SBC  A,A", // 9f
-			"AND  B", // a0
-			"AND  C", // a1
-			"AND  D", // a2
-			"AND  E", // a3
-			"AND  H", // a4
-			"AND  L", // a5
-			"AND  (HL)", // a6
-			"AND  A", // a7
-			"XOR  B", // a8
-			"XOR  C", // a9
-			"XOR  D", // aa
-			"XOR  E", // ab
-			"XOR  H", // ac
-			"XOR  L", // ad
-			"XOR  (HL)", // ae
-			"XOR  A", // af
-			"OR   B", // b0
-			"OR   C", // b1
-			"OR   D", // b2
-			"OR   E", // b3
-			"OR   H", // b4
-			"OR   L", // b5
-			"OR   (HL)", // b6
-			"OR   A", // b7
-			"CP   B", // b8
-			"CP   C", // b9
-			"CP   D", // ba
-			"CP   E", // bb
-			"CP   H", // bc
-			"CP   L", // bd
-			"CP   (HL)", // be
-			"CP   A", // bf
-			"RET  NZ", // c0
-			"POP  BC", // c1
-			"JP   NZ,a16", // c2
-			"JP   a16", // c3
-			"CALL NZ,a16", // c4
-			"PUSH BC", // c5
-			"ADD  A,d8", // c6
-			"RST  00H", // c7
-			"RET  Z", // c8
-			"RET", // c9
-			"JP   Z,a16", // ca
-			"PREFIX CB", // cb
-			"CALL Z,a16", // cc
-			"CALL a16", // cd
-			"ADC  A,d8", // ce
-			"RST  08H", // cf
-			"RET  NC", // d0
-			"POP  DE", // d1
-			"JP   NC,a16", // d2
+			"NEG A", // 40
+			"???", // 41
+			"???", // 42
+			"COM A", // 43
+			"LSR A", // 44
+			"???", // 45
+			"ROR A", // 46
+			"ASR A", // 47
+			"ASL A", // 48
+			"ROL A", // 49
+			"DEC A", // 4a
+			"???", // 4b
+			"INC A", // 4c
+			"TST A", // 4d
+			"???", // 4e
+			"CLR A", // 4f
+			"NEG B", // 50
+			"???", // 51
+			"???", // 52
+			"COM B", // 53
+			"LSR B", // 54
+			"???", // 55
+			"ROR B", // 56
+			"ASR B", // 57
+			"ASL B", // 58
+			"ROL B", // 59
+			"DEC B", // 5a
+			"???", // 5b
+			"INC B", // 5c
+			"TST B", // 5d
+			"???", // 5e
+			"CLR B", // 5f
+			"NEG (Ix + n)", // 60
+			"???", // 61
+			"???", // 62
+			"COM (Ix + n)", // 63
+			"LSR (Ix + n)", // 64
+			"???", // 65
+			"ROR (Ix + n)", // 66
+			"ASR (Ix + n)", // 67
+			"ASL (Ix + n)", // 68
+			"ROL (Ix + n)", // 69
+			"DEC (Ix + n)", // 6a
+			"???", // 6b
+			"INC (Ix + n)", // 6c
+			"TST (Ix + n)", // 6d
+			"JMP (Ix + n)", // 6e
+			"CLR (Ix + n)", // 6f
+			"NEG (nn)", // 70
+			"???", // 71
+			"???", // 72
+			"COM (nn)", // 73
+			"LSR (nn)", // 74
+			"???", // 75
+			"ROR (nn)", // 76
+			"ASR (nn)", // 77
+			"ASL (nn)", // 78
+			"ROL (nn)", // 79
+			"DEC (nn)", // 7a
+			"???", // 7b
+			"INC (nn)", // 7c
+			"TST (nn)", // 7d
+			"JMP (nn)", // 7e
+			"CLR (nn)", // 7f
+			"SUB  A,n", // 80
+			"CMP  A,n", // 81
+			"SBC  A,n", // 82
+			"???", // 83
+			"AND  A,n", // 84
+			"BIT  A,n", // 85
+			"LDA  A,n", // 86
+			"STA  A,n", // 87
+			"EOR  A,n", // 88
+			"ADC  A,n", // 89
+			"ORA  A,n", // 8a
+			"ADD  A,n", // 8b
+			"CPX  Ix,nn", // 8c
+			"BSR  n", // 8d
+			"LDS  nn", // 8e
+			"STS  nn", // 8f
+			"SUB  A,(n)", // 90
+			"CMP  A,(n)", // 91
+			"SBC  A,(n)", // 92
+			"???", // 93
+			"AND  A,(n)", // 94
+			"BIT  A,(n)", // 95
+			"LDA  A,(n)", // 96
+			"STA  A,(n)", // 97
+			"EOR  A,(n)", // 98
+			"ADC  A,(n)", // 99
+			"ORA  A,(n)", // 9a
+			"ADD  A,(n)", // 9b
+			"CPX  Ix,(n)", // 9c
+			"???", // 9d
+			"LDS  (n)", // 9e
+			"STS  (n)", // 9f
+			"SUB  A,(Ix + n)", // a0
+			"CMP  A,(Ix + n)", // a1
+			"SBC  A,(Ix + n)", // a2
+			"???", // a3
+			"AND  A,(Ix + n)", // a4
+			"BIT  A,(Ix + n)", // a5
+			"LDA  A,(Ix + n)", // a6
+			"STA  A,(Ix + n)", // a7
+			"EOR  A,(Ix + n)", // a8
+			"ADC  A,(Ix + n)", // a9
+			"ORA  A,(Ix + n)", // aa
+			"ADD  A,(Ix + n)", // ab
+			"CPX  Ix,(Ix + n)", // ac
+			"JSR  (Ix + n)", // ad
+			"LDS  (Ix + n)", // ae
+			"STS  (Ix + n)", // af
+			"SUB  A,(nn)", // b0
+			"CMP  A,(nn)", // b1
+			"SBC  A,(nn)", // b2
+			"???", // b3
+			"AND  A,(nn)", // b4
+			"BIT  A,(nn)", // b5
+			"LDA  A,(nn)", // b6
+			"STA  A,(nn)", // b7
+			"EOR  A,(nn)", // b8
+			"ADC  A,(nn)", // b9
+			"ORA  A,(nn)", // ba
+			"ADD  A,(nn)", // bb
+			"CPX  Ix,(nn)", // bc
+			"JSR  (nn)", // bd
+			"LDS  (nn)", // be
+			"STS  (nn)", // bf
+			"SUB  B,n", // c0
+			"CMP  B,n", // c1
+			"SBC  B,n", // c2
+			"???", // c3
+			"AND  B,n", // c4
+			"BIT  B,n", // c5
+			"LDA  B,n", // c6
+			"STA  B,n", // c7
+			"EOR  B,n", // c8
+			"ADC  B,n", // c9
+			"ORA  B,n", // ca
+			"ADD  B,n", // cb
+			"???", // cc
+			"???", // cd
+			"LDIx  nn", // ce
+			"STIx  nn", // cf
+			"SUB  B,(n)", // d0
+			"CMP  B,(n)", // d1
+			"SBC  B,(n)", // d2
 			"???", // d3
-			"CALL NC,a16", // d4
-			"PUSH DE", // d5
-			"SUB  d8", // d6
-			"RST  10H", // d7
-			"RET  C", // d8
-			"RETI", // d9
-			"JP   C,a16", // da
-			"???", // db
-			"CALL C,a16", // dc
+			"AND  B,(n)", // d4
+			"BIT  B,(n)", // d5
+			"LDA  B,(n)", // d6
+			"STA  B,(n)", // d7
+			"EOR  B,(n)", // d8
+			"ADC  B,(n)", // d9
+			"ORA  B,(n)", // da
+			"ADD  B,(n)", // db
+			"???", // dc
 			"???", // dd
-			"SBC  A,d8", // de
-			"RST  18H", // df
-			"LDH  (a8),A", // e0
-			"POP  HL", // e1
-			"LD   (C),A", // e2
+			"LDIx  (n)", // de
+			"STIx  (n)", // df
+			"SUB  B,(Ix + n)", // e0
+			"CMP  B,(Ix + n)", // e1
+			"SBC  B,(Ix + n)", // e2
 			"???", // e3
-			"???", // e4
-			"PUSH HL", // e5
-			"AND  d8", // e6
-			"RST  20H", // e7
-			"ADD  SP,r8", // e8
-			"JP   (HL)", // e9
-			"LD   (a16),A", // ea
-			"???", // eb
+			"AND  B,(Ix + n)", // e4
+			"BIT  B,(Ix + n)", // e5
+			"LDA  B,(Ix + n)", // e6
+			"STA  B,(Ix + n)", // e7
+			"EOR  B,(Ix + n)", // e8
+			"ADC  B,(Ix + n)", // e9
+			"ORA  B,(Ix + n)", // ea
+			"ADD  B,(Ix + n)", // eb
 			"???", // ec
 			"???", // ed
-			"XOR  d8", // ee
-			"RST  28H", // ef
-			"LDH  A,(a8)", // f0
-			"POP  AF", // f1
-			"LD   A,(C)", // f2
-			"DI", // f3
-			"???", // f4
-			"PUSH AF", // f5
-			"OR   d8", // f6
-			"RST  30H", // f7
-			"LD   HL,SP+r8", // f8
-			"LD   SP,HL", // f9
-			"LD   A,(a16)", // fa
-			"EI   ", // fb
+			"LDIx  (Ix + n)", // ee
+			"STIx  (Ix + n)", // ef
+			"SUB  B,(nn)", // f0
+			"CMP  B,(nn)", // f1
+			"SBC  B,(nn)", // f2
+			"???", // f3
+			"AND  B,(nn)", // f4
+			"BIT  B,(nn)", // f5
+			"LDA  B,(nn)", // f6
+			"STA  B,(nn)", // f7
+			"EOR  B,(nn)", // f8
+			"ADC  B,(nn)", // f9
+			"ORA  B,(nn)", // fa
+			"ADD  B,(nn)", // fb
 			"???", // fc
 			"???", // fd
-			"CP   d8", // fe
-			"RST  38H", // ff
+			"LDIx  (nn)", // fe
+			"STIx  (nn)", // ff
 		};
 
 		public static string Disassemble(ushort addr, Func<ushort, byte> reader, out ushort size)
