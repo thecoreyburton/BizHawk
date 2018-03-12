@@ -26,7 +26,7 @@ namespace BizHawk.Client.Common
 		{
 			InvalidateCallback?.Invoke(index);
 		}
-		
+
 		internal NDBDatabase NdbDatabase { get; set; }
 		private Guid _guid = Guid.NewGuid();
 		private SortedList<int, StateManagerState> _states = new SortedList<int, StateManagerState>();
@@ -40,28 +40,17 @@ namespace BizHawk.Client.Common
 			}
 		}
 
-		private long _stateCleanupTime;
-		private readonly long _stateCleanupPeriod = 10000;
-
 		private bool _isMountedForWrite;
 		private readonly TasMovie _movie;
 
+		private StateManagerDecay _decay;
 		private ulong _expectedStateSize;
+		private int _stateFrequency;
 		private readonly int _minFrequency = 1;
 		private readonly int _maxFrequency = 16;
 		private int _maxStates => (int)(Settings.Cap / _expectedStateSize) +
 			(int)((ulong)Settings.DiskCapacitymb * 1024 * 1024 / _expectedStateSize);
 		private int _fileStateGap => 1 << Settings.FileStateGap;
-
-		private int StateFrequency
-		{
-			get
-			{
-				return NumberExtensions.Clamp(
-					((int)_expectedStateSize / Settings.MemStateGapDivider / 1024),
-					_minFrequency, _maxFrequency);
-			}
-		}
 
 		public TasStateManager(TasMovie movie)
 		{
@@ -73,13 +62,22 @@ namespace BizHawk.Client.Common
 				SetState(0, _movie.BinarySavestate);
 			}
 
-			_stateCleanupTime = DateTime.Now.Ticks + _stateCleanupPeriod;
+			_decay = new StateManagerDecay(this);
 		}
 
 		public void Dispose()
 		{
 			// States and BranchStates don't need cleaning because they would only contain an ndbdatabase entry which was demolished by the below
 			NdbDatabase?.Dispose();
+		}
+
+		public void UpdateStateFrequency()
+		{
+			_stateFrequency = NumberExtensions.Clamp(
+					((int)_expectedStateSize / Settings.MemStateGapDivider / 1024),
+					_minFrequency, _maxFrequency);
+
+			_decay.UpdateSettings(_maxStates, _stateFrequency, 4);
 		}
 
 		/// <summary>
@@ -95,6 +93,7 @@ namespace BizHawk.Client.Common
 			int limit = 0;
 			_isMountedForWrite = true;
 			_expectedStateSize = (ulong)Core.SaveStateBinary().Length;
+			UpdateStateFrequency();
 
 			if (_expectedStateSize > 0)
 			{
@@ -110,7 +109,7 @@ namespace BizHawk.Client.Common
 
 			NdbDatabase = new NDBDatabase(StatePath, Settings.DiskCapacitymb * 1024 * 1024, (int)_expectedStateSize);
 		}
-
+		
 		public TasStateManagerSettings Settings { get; set; }
 
 		/// <summary>
@@ -156,8 +155,8 @@ namespace BizHawk.Client.Common
 		public void Capture(bool force = false)
 		{
 			bool shouldCapture;
-
 			int frame = Global.Emulator.Frame;
+
 			if (_movie.StartsFromSavestate && frame == 0) // Never capture frame 0 on savestate anchored movies since we have it anyway
 			{
 				shouldCapture = false;
@@ -170,13 +169,13 @@ namespace BizHawk.Client.Common
 			{
 				shouldCapture = true;
 			}
-			else if (_movie.Markers.IsMarker(frame + 1))
+			else if (StateIsMarker(frame))
 			{
 				shouldCapture = true; // Markers shoudl always get priority
 			}
 			else
 			{
-				shouldCapture = frame % StateFrequency == 0;
+				shouldCapture = frame % _stateFrequency == 0;
 			}
 
 			if (shouldCapture)
@@ -253,7 +252,7 @@ namespace BizHawk.Client.Common
 			return anyInvalidated;
 		}
 
-		private bool StateIsMarker(int frame)
+		public bool StateIsMarker(int frame)
 		{
 			if (frame == -1)
 			{
@@ -263,8 +262,8 @@ namespace BizHawk.Client.Common
 			return _movie.Markers.IsMarker(frame + 1);
 		}
 
-		private void RemoveState(int frame)
-		{			
+		public void RemoveState(int frame)
+		{
 			int index = _states.IndexOfKey(frame);
 
 			if (frame < 1 || index < 1)
@@ -287,57 +286,14 @@ namespace BizHawk.Client.Common
 		}
 
 		/// <summary>
-		/// Deletes/moves states to follow the state storage size limits.
+		/// Deletes states to follow the state storage size limits.
 		/// Used after changing the settings too.
 		/// </summary>
 		public void LimitStateCount()
 		{
-			if (Used + _expectedStateSize > Settings.Cap
-				|| DiskUsed > (ulong)Settings.DiskCapacitymb * 1024 * 1024
-				|| DateTime.Now.Ticks > _stateCleanupTime)
+			if (StateCount + 1 > _maxStates || DiskUsed > (ulong)Settings.DiskCapacitymb * 1024 * 1024)
 			{
-				// rely on frames, because relying on indexes while changing the collection is ugly
-				List<int> framesToClear = new List<int>();
-
-				// we have 5 greenzone regions, the last one we do not touch
-				int regionSize = _maxStates / 5;
-
-				// drop states from previous regions, increasing the gap for each one, make sure to ignore state 0
-				for (int gap = 2, last = _states.ToList().Count; gap <= 16; gap <<= 1)
-				{
-					// last egion index
-					last -= regionSize;
-					if (last < 1)
-					{
-						return;
-					}
-
-					// first region index
-					int first = last - regionSize;
-					if (first < 1)
-					{
-						first = 1;
-					}
-
-					// iterate through the region and record states' frames
-					for (int i = last; i >= first; i--)
-					{
-						if ((i & (gap - 1)) > 0)
-						{
-							framesToClear.Add(_states.ElementAt(i).Key);
-						}
-					}
-				}
-
-				if (framesToClear.Any())
-				{
-					foreach (var frame in framesToClear)
-					{
-						RemoveState(frame);
-					}
-				}
-
-				_stateCleanupTime = DateTime.Now.Ticks + _stateCleanupPeriod;
+				_decay.Trigger(StateCount + 1 - _maxStates);
 			}
 		}
 
@@ -350,21 +306,22 @@ namespace BizHawk.Client.Common
 			// still leave marker states
 			for (int i = 1; i < _states.Count; i++)
 			{
-				if (_movie.Markers.IsMarker(_states.ElementAt(i).Key + 1)
-					|| _states.ElementAt(i).Key % _fileStateGap == 0)
+				int frame = GetStateFrameByIndex(i);
+
+				if (StateIsMarker(frame) || frame % _fileStateGap < _stateFrequency)
 				{
 					continue;
 				}
 
 				ret.Add(i);
 
-				if (_states.ElementAt(i).Value.IsOnDisk)
+				if (_states.Values[i].IsOnDisk)
 				{
 					saveUsed -= _expectedStateSize;
 				}
 				else
 				{
-					saveUsed -= (ulong)_states.ElementAt(i).Value.Length;
+					saveUsed -= (ulong)_states.Values[i].Length;
 				}
 			}
 
@@ -375,13 +332,12 @@ namespace BizHawk.Client.Common
 			{
 				do
 				{
-					index++;
-					if (index >= _states.Count)
+					if (++index >= _states.Count)
 					{
 						break;
 					}
 				}
-				while (_movie.Markers.IsMarker(_states.ElementAt(index).Key + 1));
+				while (StateIsMarker(GetStateFrameByIndex(index)));
 
 				if (index >= _states.Count)
 				{
@@ -390,13 +346,13 @@ namespace BizHawk.Client.Common
 
 				ret.Add(index);
 
-				if (_states.ElementAt(index).Value.IsOnDisk)
+				if (_states.Values[index].IsOnDisk)
 				{
 					saveUsed -= _expectedStateSize;
 				}
 				else
 				{
-					saveUsed -= (ulong)_states.ElementAt(index).Value.Length;
+					saveUsed -= (ulong)_states.Values[index].Length;
 				}
 			}
 
@@ -404,19 +360,18 @@ namespace BizHawk.Client.Common
 			index = 0;
 			while (saveUsed > (ulong)Settings.DiskSaveCapacitymb * 1024 * 1024)
 			{
-				index++;
-				if (!ret.Contains(index))
+				if (!ret.Contains(++index))
 				{
 					ret.Add(index);
 				}
 
-				if (_states.ElementAt(index).Value.IsOnDisk)
+				if (_states.Values[index].IsOnDisk)
 				{
 					saveUsed -= _expectedStateSize;
 				}
 				else
 				{
-					saveUsed -= (ulong)_states.ElementAt(index).Value.Length;
+					saveUsed -= (ulong)_states.Values[index].Length;
 				}
 			}
 
@@ -435,18 +390,24 @@ namespace BizHawk.Client.Common
 			}
 		}
 
+		// Map:
+		// 4 bytes - total savestate count
+		// [Foreach state]
+		// 4 bytes - frame
+		// 4 bytes - length of savestate
+		// 0 - n savestate
 		public void Save(BinaryWriter bw)
 		{
 			List<int> noSave = ExcludeStates();
-
 			bw.Write(_states.Count - noSave.Count);
+
 			for (int i = 0; i < _states.Count; i++)
 			{
 				if (noSave.Contains(i))
 				{
 					continue;
 				}
-				
+
 				KeyValuePair<int, StateManagerState> kvp = _states.ElementAt(i);
 				bw.Write(kvp.Key);
 				bw.Write(kvp.Value.Length);
@@ -454,18 +415,14 @@ namespace BizHawk.Client.Common
 			}
 		}
 
-		// Map:
-		// 4 bytes - total savestate count
-		// [Foreach state]
-		// 4 bytes - frame
-		// 4 bytes - length of savestate
-		// 0 - n savestate
 		public void Load(BinaryReader br)
 		{
 			_states.Clear();
+
 			try
 			{
 				int nstates = br.ReadInt32();
+
 				for (int i = 0; i < nstates; i++)
 				{
 					int frame = br.ReadInt32();
@@ -487,6 +444,28 @@ namespace BizHawk.Client.Common
 			var s = _states.LastOrDefault(state => state.Key < frame);
 
 			return this[s.Key];
+		}
+
+		/// <summary>
+		/// Returns index of the state right above the given frame
+		/// </summary>
+		/// <param name="frame"></param>
+		/// <returns></returns>
+		public int GetStateIndexByFrame(int frame)
+		{
+			return _states.IndexOfKey(GetStateClosestToFrame(frame).Key);
+		}
+
+		/// <summary>
+		/// Returns frame of the state at the given index
+		/// </summary>
+		/// <param name="index"></param>
+		/// <returns></returns>
+		public int GetStateFrameByIndex(int index)
+		{
+			// feos: this is called super often by decay
+			// this method is hundred times faster than _states.ElementAt(index).Key
+			return _states.Keys[index];
 		}
 
 		private ulong _used;
@@ -549,7 +528,7 @@ namespace BizHawk.Client.Common
 			}
 		}
 
-		public int LastEmulatedFrame
+		public int LastStatedFrame
 		{
 			get
 			{
